@@ -1,4 +1,4 @@
-package social_media.social_media_handler.dto;
+package social_media.social_media_handler.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SignupResponse{
-    private long id;
-    private String username;
+    private String message;
+    private String email;
 }
