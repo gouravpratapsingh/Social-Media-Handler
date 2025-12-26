@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Buffer Hero Clone</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -13,31 +14,230 @@
             background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
             background-size: 40px 40px;
         }
+        @keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out;
+}
     </style>
 </head>
 <body class="bg-white">
 
-    <nav class="relative bg-white z-50">
+    <nav class="sticky top-0 bg-white z-50">
         <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center cursor-pointer">
                 <img src="assets/graphuralogo.png" alt="graphura Logo" class="h-16 w-auto">
             </div>
 
-            <ul class="hidden md:flex items-center space-x-8 text-[20px] font-medium text-slate-800">
-                <li class="flex items-center space-x-1 cursor-pointer hover:text-blue-600">
-                    <span>Features</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </li>
-                <li class="flex items-center space-x-1 cursor-pointer hover:text-blue-600">
-                    <span>Channels</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </li>
-                <li class="flex items-center space-x-1 cursor-pointer hover:text-blue-600">
-                    <span>Resources</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </li>
-                <li class="cursor-pointer hover:text-blue-600">Pricing</li>
-            </ul>
+            <ul class="hidden md:flex items-center space-x-12 text-[20px] font-medium text-slate-800 relative">
+
+  <!-- FEATURES -->
+  <li class="relative group">
+    <button class="flex items-center space-x-1 hover:text-blue-600">
+      <span>Features</span>
+      <svg class="w-4 h-4 transition-transform group-hover:rotate-180"
+           fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path d="M19 9l-7 7-7-7"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <!-- DROPDOWN -->
+    <div
+      class="absolute left-1/2 top-full mt-6 w-[720px] -translate-x-1/2
+             rounded-2xl bg-[#FBFAF7] shadow-xl border
+             opacity-0 invisible group-hover:opacity-100 group-hover:visible
+             transition-all duration-200 z-50">
+
+      <div class="grid grid-cols-2 gap-10 p-10 text-[16px]">
+
+        <!-- LEFT -->
+        <div class="space-y-6">
+          <div class="flex gap-3">
+            <span>✏️</span>
+            <div>
+              <h4 class="font-semibold">Create</h4>
+              <p class="text-gray-600">Build your own library of content ideas</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <span>📊</span>
+            <div>
+              <h4 class="font-semibold">Analyze</h4>
+              <p class="text-gray-600">Measure performance and turn insights into growth</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <span>🤝</span>
+            <div>
+              <h4 class="font-semibold">Collaborate</h4>
+              <p class="text-gray-600">Work together seamlessly, from planning to publishing</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="space-y-6">
+          <div class="flex gap-3">
+            <span>🚀</span>
+            <div>
+              <h4 class="font-semibold">Publish</h4>
+              <p class="text-gray-600">Plan and schedule content across platforms</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <span>💬</span>
+            <div>
+              <h4 class="font-semibold">Community</h4>
+              <p class="text-gray-600">Easily engage with your community</p>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <span>🔗</span>
+            <div>
+              <h4 class="font-semibold">Start Page</h4>
+              <p class="text-gray-600">Build a custom link-in-bio page in minutes</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </li>
+
+  <!-- CHANNELS (same pattern, shorter dropdown) -->
+  <li class="relative group">
+    <button class="flex items-center space-x-1 hover:text-blue-600">
+      <span>Channels</span>
+      <svg class="w-4 h-4 group-hover:rotate-180 transition"
+           fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path d="M19 9l-7 7-7-7"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div
+      class="absolute left-1/2 top-full mt-6 w-[420px] -translate-x-1/2
+             rounded-2xl bg-[#FBFAF7] shadow-xl border
+             opacity-0 invisible group-hover:opacity-100 group-hover:visible
+             transition-all duration-200 z-50">
+
+     <div class="p-8 space-y-5 text-[16px]">
+
+  <div class="flex items-center gap-3 cursor-pointer hover:text-blue-600">
+    <i data-lucide="instagram" class="w-5 h-5 text-pink-500"></i>
+    <span class="font-medium">Instagram</span>
+  </div>
+
+  <div class="flex items-center gap-3 cursor-pointer hover:text-blue-600">
+    <i data-lucide="facebook" class="w-5 h-5 text-blue-600"></i>
+    <span class="font-medium">Facebook</span>
+  </div>
+
+  <div class="flex items-center gap-3 cursor-pointer hover:text-blue-600">
+    <i data-lucide="linkedin" class="w-5 h-5 text-blue-700"></i>
+    <span class="font-medium">LinkedIn</span>
+  </div>
+
+  <div class="flex items-center gap-3 cursor-pointer hover:text-blue-600">
+    <i data-lucide="music" class="w-5 h-5 text-black"></i>
+    <span class="font-medium">TikTok</span>
+  </div>
+
+  <div class="flex items-center gap-3 cursor-pointer hover:text-blue-600">
+    <i data-lucide="youtube" class="w-5 h-5 text-red-600"></i>
+    <span class="font-medium">YouTube</span>
+  </div>
+
+</div>
+
+    </div>
+  </li>
+
+  <!-- RESOURCES -->
+  <li class="relative group">
+    <button class="flex items-center space-x-1 hover:text-blue-600">
+      <span>Resources</span>
+      <svg class="w-4 h-4 group-hover:rotate-180 transition"
+           fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path d="M19 9l-7 7-7-7"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div
+      class="absolute left-1/2 top-full mt-6 w-[420px] -translate-x-1/2
+             rounded-2xl bg-[#FBFAF7] shadow-xl border
+             opacity-0 invisible group-hover:opacity-100 group-hover:visible
+             transition-all duration-200 z-50">
+
+      <div class="p-8 space-y-6 text-[16px]">
+
+  <div class="flex gap-3 items-start cursor-pointer hover:text-blue-600">
+    <i data-lucide="book-open" class="w-5 h-5 mt-1 text-gray-600"></i>
+    <div>
+      <h4 class="font-semibold">Blog</h4>
+      <p class="text-gray-600 text-sm">Insights, updates, and best practices</p>
+    </div>
+  </div>
+
+  <div class="flex gap-3 items-start cursor-pointer hover:text-blue-600">
+    <i data-lucide="graduation-cap" class="w-5 h-5 mt-1 text-gray-600"></i>
+    <div>
+      <h4 class="font-semibold">Guides</h4>
+      <p class="text-gray-600 text-sm">Step-by-step marketing playbooks</p>
+    </div>
+  </div>
+
+  <div class="flex gap-3 items-start cursor-pointer hover:text-blue-600">
+    <i data-lucide="wrench" class="w-5 h-5 mt-1 text-gray-600"></i>
+    <div>
+      <h4 class="font-semibold">Free Tools</h4>
+      <p class="text-gray-600 text-sm">Helpful tools to grow faster</p>
+    </div>
+  </div>
+
+  <div class="flex gap-3 items-start cursor-pointer hover:text-blue-600">
+    <i data-lucide="briefcase" class="w-5 h-5 mt-1 text-gray-600"></i>
+    <div>
+      <h4 class="font-semibold">Case Studies</h4>
+      <p class="text-gray-600 text-sm">Real-world success stories</p>
+    </div>
+  </div>
+
+</div>
+
+    </div>
+  </li>
+
+  
+</ul>
+
 
             <div class="flex items-center space-x-4">
                 <button class="px-6 py-2 border border-slate-300 rounded-full font-medium text-slate-700 hover:bg-gray-50"><a href="login.html">Log in</a></button>
@@ -73,84 +273,128 @@
                     </button>
                 </form>
                 <p class="mt-4 text-xs text-gray-400">
-                    By entering your email, you agree to receive emails from Buffer.
+                    By entering your email, you agree to receive emails from Graphura.
                 </p>
             </div>
         </div>
     </main>
-<!-- number counter -->
- <section class="py-20 bg-white">
-  <div class="max-w-6xl mx-auto px-6">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      
-      <div class="border border-gray-100 rounded-[2rem] p-12 text-center shadow-sm hover:shadow-md transition-shadow">
-        <div class="text-5xl font-bold text-slate-800 mb-2 counter" data-target="191726">0</div>
-        <div class="text-xs font-bold text-gray-500 tracking-widest uppercase">Active Users</div>
-      </div>
 
-      <div class="border border-gray-100 rounded-[2rem] p-12 text-center shadow-sm hover:shadow-md transition-shadow">
-        <div class="text-5xl font-bold text-slate-800 mb-2 counter" data-target="7858881">0</div>
-        <div class="text-xs font-bold text-gray-500 tracking-widest uppercase">Posts Published Last Month</div>
-      </div>
-
-      <div class="border border-gray-100 rounded-[2rem] p-12 text-center shadow-sm hover:shadow-md transition-shadow">
-        <div class="text-5xl font-bold text-slate-800 mb-2 counter" data-target="5">0</div>
-        <div class="text-xs font-bold text-gray-500 tracking-widest uppercase">Social Platforms Supported</div>
-      </div>
-
-    </div>
-  </div>
-</section>
+ 
 <!-- four card grid -->
- <section class="py-16 bg-white px-6">
-  <div class="max-w-7xl mx-auto">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-      
-      <div class="group flex flex-col h-full border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer" onclick="openModal('publish')">
-        <div class="bg-[#FFB1A1] p-6 pt-10 flex flex-col items-center relative overflow-hidden">
-          <h3 class="text-xl font-bold text-slate-800 text-center mb-6 px-4 z-10">The most complete set of publishing integrations, ever</h3>
-          <img src="path-to-ui-1.png" class="rounded-t-lg shadow-2xl w-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+<section class="py-20 bg-[#FAFAF8]">
+  <div class="max-w-6xl mx-auto px-6">
+
+    <!-- GRID WRAPPER -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+      <!-- CARD 1 -->
+      <div class="rounded-3xl border border-gray-200 bg-white overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
+        <div class="bg-[#FFB7AD] px-10 pt-14 pb-10 text-center">
+          <h2 class="text-2xl font-extrabold text-gray-900">
+            The most complete set of publishing integrations, ever
+          </h2>
+          <img
+            src="https://dummyimage.com/900x500/ffffff/000000"
+            class="mt-8 rounded-xl shadow-2xl mx-auto"
+          />
         </div>
-        <div class="p-8 flex flex-grow flex-col bg-white">
-          <span class="text-xs font-bold text-gray-500 tracking-widest uppercase mb-4">Publish</span>
-          <p class="text-slate-600 mb-6">Schedule your content to the most popular platforms easily.</p>
-          <button class="mt-auto font-semibold border-b-2 border-slate-800 w-fit group-hover:text-blue-600 group-hover:border-blue-600 transition-colors">Learn more</button>
+
+        <div class="px-10 py-10">
+          <span class="text-xs font-bold tracking-widest text-gray-500 uppercase">
+            Publish
+          </span>
+
+          <p class="mt-4 text-gray-700 leading-relaxed">
+            Schedule your content across Facebook, Instagram, TikTok, LinkedIn, YouTube Shorts, Pinterest, Google Business, Mastodon and X.
+          </p>
+
+          <button class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-gray-900 hover:underline">
+            Learn more →
+          </button>
         </div>
       </div>
 
-      <div class="group flex flex-col h-full border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer" onclick="openModal('create')">
-        <div class="bg-[#D1C4FF] p-6 pt-10 flex flex-col items-center relative overflow-hidden">
-          <h3 class="text-xl font-bold text-slate-800 text-center mb-6 px-4 z-10">Turn any idea into the perfect post</h3>
-          <img src="path-to-ui-2.png" class="rounded-t-lg shadow-2xl w-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+      <!-- CARD 2 -->
+      <div class="rounded-3xl border border-gray-200 bg-white overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
+        <div class="bg-[#D9CCFF] px-10 pt-14 pb-10 text-center">
+          <h2 class="text-2xl font-extrabold text-gray-900">
+            Turn any idea into the perfect post
+          </h2>
+          <img
+            src="https://dummyimage.com/900x500/ffffff/000000"
+            class="mt-8 rounded-xl shadow-2xl mx-auto"
+          />
         </div>
-        <div class="p-8 flex flex-grow flex-col bg-white">
-          <span class="text-xs font-bold text-gray-500 tracking-widest uppercase mb-4">Create</span>
-          <p class="text-slate-600 mb-6">Craft and collaborate on social media posts with ease.</p>
-          <button class="mt-auto font-semibold border-b-2 border-slate-800 w-fit group-hover:text-blue-600 group-hover:border-blue-600 transition-colors">Learn more</button>
+
+        <div class="px-10 py-10">
+          <span class="text-xs font-bold tracking-widest text-gray-500 uppercase">
+            Create
+          </span>
+
+          <p class="mt-4 text-gray-700 leading-relaxed">
+            Draft, design, and collaborate with your team using a single,
+            distraction-free editor.
+          </p>
+
+          <button class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-gray-900 hover:underline">
+            Learn more →
+          </button>
         </div>
       </div>
 
-      <div class="group flex flex-col h-full border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer" onclick="openModal('analyze')">
-        <div class="bg-[#C1E8FF] p-6 pt-10 flex flex-col items-center relative overflow-hidden">
-          <h3 class="text-xl font-bold text-slate-800 text-center mb-6 px-4 z-10">Measure your social media performance</h3>
-          <img src="path-to-ui-3.png" class="rounded-t-lg shadow-2xl w-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+      <!-- CARD 3 -->
+      <div class="rounded-3xl border border-gray-200 bg-white overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
+        <div class="bg-[#FFE29A] px-10 pt-14 pb-10 text-center">
+          <h2 class="text-2xl font-extrabold text-gray-900">
+            Reply to comments in a flash
+          </h2>
+          <img
+            src="https://dummyimage.com/900x500/ffffff/000000"
+            class="mt-8 rounded-xl shadow-2xl mx-auto"
+          />
         </div>
-        <div class="p-8 flex flex-grow flex-col bg-white">
-          <span class="text-xs font-bold text-gray-500 tracking-widest uppercase mb-4">Analyze</span>
-          <p class="text-slate-600 mb-6">See what's working and what's not with in-depth analytics.</p>
-          <button class="mt-auto font-semibold border-b-2 border-slate-800 w-fit group-hover:text-blue-600 group-hover:border-blue-600 transition-colors">Learn more</button>
+
+        <div class="px-10 py-10">
+          <span class="text-xs font-bold tracking-widest text-gray-500 uppercase">
+            Community
+          </span>
+
+          <p class="mt-4 text-gray-700 leading-relaxed">
+            Engage with your audience faster using one unified inbox
+            across platforms.
+          </p>
+
+          <button class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-gray-900 hover:underline">
+            Learn more →
+          </button>
         </div>
       </div>
 
-      <div class="group flex flex-col h-full border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer" onclick="openModal('engage')">
-        <div class="bg-[#D6F5D8] p-6 pt-10 flex flex-col items-center relative overflow-hidden">
-          <h3 class="text-xl font-bold text-slate-800 text-center mb-6 px-4 z-10">Engage with your audience quickly</h3>
-          <img src="path-to-ui-4.png" class="rounded-t-lg shadow-2xl w-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+      <!-- CARD 4 -->
+      <div class="rounded-3xl border border-gray-200 bg-white overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
+        <div class="bg-[#BEE3FF] px-10 pt-14 pb-10 text-center">
+          <h2 class="text-2xl font-extrabold text-gray-900">
+            Answers, not just analytics
+          </h2>
+          <img
+            src="https://dummyimage.com/900x500/ffffff/000000"
+            class="mt-8 rounded-xl shadow-2xl mx-auto"
+          />
         </div>
-        <div class="p-8 flex flex-grow flex-col bg-white">
-          <span class="text-xs font-bold text-gray-500 tracking-widest uppercase mb-4">Engage</span>
-          <p class="text-slate-600 mb-6">Reply to comments and stay on top of interactions.</p>
-          <button class="mt-auto font-semibold border-b-2 border-slate-800 w-fit group-hover:text-blue-600 group-hover:border-blue-600 transition-colors">Learn more</button>
+
+        <div class="px-10 py-10">
+          <span class="text-xs font-bold tracking-widest text-gray-500 uppercase">
+            Analyze
+          </span>
+
+          <p class="mt-4 text-gray-700 leading-relaxed">
+            Understand what works, why it works, and what to do next
+            with actionable insights.
+          </p>
+
+          <button class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-gray-900 hover:underline">
+            Learn more →
+          </button>
         </div>
       </div>
 
@@ -158,12 +402,384 @@
   </div>
 </section>
 
-<div id="infoModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-  <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl relative">
-    <button onclick="closeModal()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-600 text-2xl">×</button>
-    <div id="modalContent"></div>
+
+
+<div id="featureModal"
+     class="fixed inset-0 hidden items-center justify-center bg-black/40 backdrop-blur-sm z-50">
+
+  <div class="bg-white rounded-3xl max-w-lg w-full p-8 relative animate-fadeIn">
+    <button
+      id="closeModal"
+      class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-xl">
+      ✕
+    </button>
+
+    <h3 class="text-2xl font-extrabold text-gray-900">
+      Publishing Integrations
+    </h3>
+
+    <p class="mt-4 text-gray-600 leading-relaxed">
+      Connect and schedule posts across all major social platforms from one
+      streamlined dashboard. Save time, stay consistent, and scale faster.
+    </p>
+
+    <button
+      class="mt-8 px-6 py-3 bg-gray-900 text-white rounded-full text-sm font-semibold hover:bg-gray-800 transition">
+      Get started
+    </button>
   </div>
 </div>
+
+<section class="py-20 px-6">
+  <div class="max-w-7xl mx-auto">
+
+    <!-- Heading -->
+    <h2 class="text-center text-4xl md:text-5xl font-semibold text-[#1f2d2b] mb-16">
+      …and so much more!
+    </h2>
+
+    <!-- Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+
+      <!-- Card 1 -->
+      <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition p-6 flex flex-col">
+        <div class="rounded-xl bg-[#b6f0a5] p-4 mb-6">
+          <img
+            src="https://via.placeholder.com/300x180"
+            alt="Collaborate"
+            class="rounded-lg w-full"
+          />
+        </div>
+
+        <h3 class="text-xl font-semibold mb-3">Collaborate</h3>
+
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          Manage, edit, and approve social media posts from your team.
+        </p>
+
+        <!-- CTA pushed to bottom -->
+        <a href="#" class="mt-auto font-medium underline underline-offset-4">
+          Learn more →
+        </a>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition p-6 flex flex-col">
+        <div class="rounded-xl bg-[#ffbe8c] p-4 mb-6">
+          <img
+            src="https://via.placeholder.com/300x180"
+            alt="Start page"
+            class="rounded-lg w-full"
+          />
+        </div>
+
+        <h3 class="text-xl font-semibold mb-3">Start page</h3>
+
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          Turn your social bio into a powerful, personalized hub.
+        </p>
+
+        <a href="#" class="mt-auto font-medium underline underline-offset-4">
+          Learn more →
+        </a>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition p-6 flex flex-col">
+        <div class="rounded-xl bg-[#aef0e6] p-4 mb-6">
+          <img
+            src="https://via.placeholder.com/300x180"
+            alt="AI assistant"
+            class="rounded-lg w-full"
+          />
+        </div>
+
+        <h3 class="text-xl font-semibold mb-3">AI assistant</h3>
+
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          Brainstorm ideas, rewrite content, and craft platform-specific posts.
+        </p>
+
+        <a href="#" class="mt-auto font-medium underline underline-offset-4">
+          Learn more →
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="py-20 bg-[#FBFAF7] px-6">
+  <div class="max-w-7xl mx-auto">
+
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-14 gap-6">
+      <div>
+        <p class="text-sm tracking-widest text-gray-500 uppercase mb-2">
+          Resources
+        </p>
+        <h2 class="text-4xl md:text-5xl font-semibold text-[#1f2d2b]">
+          Fuel your social media success
+        </h2>
+      </div>
+      <p class="text-gray-600 max-w-md">
+        Everything you need to level up your social strategy—in one place.
+      </p>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      <!-- Card 1 (Tall) -->
+      <div class="resource-card rounded-3xl bg-[#DCD1FF] p-6 flex flex-col justify-between"
+       data-resource="tools">
+        <div>
+          <h3 class="text-xl font-semibold mb-2">
+            Free Marketing Tools →
+          </h3>
+          <p class="text-gray-700 mb-6">
+            A collection of free tools to make your social media marketing easier and more effective.
+          </p>
+        </div>
+        <img
+          src="https://via.placeholder.com/400x280"
+          class="rounded-xl mt-auto"
+          alt=""
+        />
+      </div>
+
+      <!-- Card 2 (Wide) -->
+      <div class="resource-card lg:col-span-2 rounded-3xl bg-[#A7EFE6] p-6 flex flex-col md:flex-row items-center gap-6"
+       data-resource="glossary">
+        <div class="flex-1">
+          <h3 class="text-xl font-semibold mb-2">
+            Social Media Glossary →
+          </h3>
+          <p class="text-gray-700">
+            A glossary of the most popular terms to help you make sense of all the social media lingo.
+          </p>
+        </div>
+        <img
+          src="https://via.placeholder.com/300x200"
+          class="rounded-xl"
+          alt=""
+        />
+      </div>
+
+      <!-- Card 3 -->
+      <div class="resource-card rounded-3xl bg-[#FFB7A5] p-6"
+       data-resource="marketing101">
+        <h3 class="text-xl font-semibold mb-2">
+          Social Media Marketing 101 →
+        </h3>
+        <p class="text-gray-700 mb-6">
+          Your go-to guide for mastering the basics of social media and beyond.
+        </p>
+        <img
+          src="https://via.placeholder.com/350x220"
+          class="rounded-xl"
+          alt=""
+        />
+      </div>
+
+      <!-- Card 4 -->
+      <div class="resource-card rounded-3xl bg-[#F3C6FF] p-6" data-resource="besttime">
+        <h3 class="text-xl font-semibold mb-2">
+          Best Time to Post →
+        </h3>
+        <p class="text-gray-700 mb-6">
+          Discover the best times to post on social media to maximize your engagement.
+        </p>
+        <img
+          src="https://via.placeholder.com/350x220"
+          class="rounded-xl"
+          alt=""
+        />
+      </div>
+
+      <!-- Card 5 (Tall) -->
+      <div class="resource-card rounded-3xl bg-[#FFD98E] p-6 flex flex-col justify-between"
+       data-resource="resources">
+        <div>
+          <h3 class="text-xl font-semibold mb-2">
+            Social Media Resources →
+          </h3>
+          <p class="text-gray-700 mb-6">
+            A collection of articles and interviews packed with tips, stories, and insights.
+          </p>
+        </div>
+        <img
+          src="https://via.placeholder.com/400x260"
+          class="rounded-xl mt-auto"
+          alt=""
+        />
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div
+  id="resourceModal"
+  class="fixed inset-0 hidden items-center justify-center bg-black/40 backdrop-blur-sm z-50"
+>
+  <div class="bg-white rounded-3xl max-w-lg w-full p-8 relative animate-fadeIn">
+    <button
+      id="closeResourceModal"
+      class="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-xl"
+    >
+      ✕
+    </button>
+
+    <h3 id="resourceTitle" class="text-2xl font-bold text-gray-900"></h3>
+    <p id="resourceDescription" class="mt-4 text-gray-600 leading-relaxed"></p>
+
+    <button
+      class="mt-8 px-6 py-3 bg-gray-900 text-white rounded-full text-sm font-semibold hover:bg-gray-800 transition"
+    >
+      Explore resource
+    </button>
+  </div>
+</div>
+
+<section class="py-20 px-6 bg-white">
+  <div class="max-w-7xl mx-auto">
+
+    <!-- Outer Card -->
+    <div class="bg-[#B7F3A6] rounded-2xl p-10 md:p-16 text-center">
+
+      <!-- Heading -->
+      <h2 class="text-3xl md:text-5xl font-semibold text-[#132D2A] max-w-3xl mx-auto">
+        Grow your social presence<br class="hidden md:block" />
+        with confidence
+      </h2>
+
+      <!-- CTA Button -->
+      <div class="mt-10">
+        <button
+          id="ctaButton"
+          class="inline-flex items-center gap-3 px-8 py-4 bg-[#1F3D3A] text-white text-sm md:text-base font-medium rounded-full hover:bg-[#183331] transition"
+        ><a href="signup.html"></a>
+          <a href="signup.html">
+          Get started for free
+          <span class="text-lg">→</span></a>
+        </button>
+      </div>
+
+      <!-- Subtext -->
+      <p class="mt-6 text-sm text-[#1F3D3A]">
+        No credit card needed. Free forever.
+      </p>
+
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- FOOTER -->
+  <footer class="bg-[#1f2d2b] text-white pt-16 px-6">
+    
+    <!-- Top Grid -->
+    <div class="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-10">
+
+      <!-- Tools -->
+      <div>
+        <h4 class="text-green-400 font-semibold mb-4">Tools</h4>
+        <ul class="space-y-2 text-sm text-gray-300">
+          <li>Create</li>
+          <li>Publish</li>
+          <li>Community</li>
+          <li>Analyze</li>
+          <li>Collaborate</li>
+        </ul>
+      </div>
+
+      <!-- Features -->
+      <div>
+        <h4 class="text-green-400 font-semibold mb-4">Features</h4>
+        <ul class="space-y-2 text-sm text-gray-300">
+          <li>AI Assistant</li>
+          <li>Start Page</li>
+          <li>Integrations</li>
+          
+        </ul>
+      </div>
+
+      <!-- Resources -->
+      <div>
+        <h4 class="text-green-400 font-semibold mb-4">Resources</h4>
+        <ul class="space-y-2 text-sm text-gray-300">
+          <li>Blog</li>
+          <li>Template Library</li>
+          <li>Social Media Insights</li>
+          <li>Glossary</li>
+          <li>Free Marketing Tools</li>
+        </ul>
+      </div>
+
+     
+
+      <!-- Support -->
+      <div>
+        <h4 class="text-green-400 font-semibold mb-4">Support</h4>
+        <ul class="space-y-2 text-sm text-gray-300">
+          <li>Help Center</li>
+          <li>Status</li>
+          <li>Changelog</li>
+          <li>Request a Feature</li>
+        </ul>
+      </div>
+
+     
+
+    </div>
+
+    <!-- Divider -->
+    <div class="border-t border-gray-600 my-12 max-w-7xl mx-auto"></div>
+
+    <!-- Bottom Section -->
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 pb-10">
+
+      <!-- Logo + Brand (with JS functionality) -->
+      <div class="flex items-center gap-4 cursor-pointer" id="brandTrigger">
+        
+        <!-- IMAGE TAG (Website Logo) -->
+        <img 
+          src="assets/graphuralogo.png" alt="Website Logo" class="w-178 h-16"
+        />
+
+        
+      </div>
+
+ <!-- Copyright -->
+      <div class="text-sm text-gray-400 text-center md:text-right">
+        © 2025 Graphura India Private Limited · Privacy · Terms · Security
+      </div>
+
+      <!-- Social Icons -->
+      <div class="flex items-center gap-6 text-gray-300">
+        <i data-lucide="instagram" class="w-5 h-5 hover:text-white cursor-pointer"></i>
+        <i data-lucide="facebook" class="w-5 h-5 hover:text-white cursor-pointer"></i>
+        <i data-lucide="twitter" class="w-5 h-5 hover:text-white cursor-pointer"></i>
+        <i data-lucide="linkedin" class="w-5 h-5 hover:text-white cursor-pointer"></i>
+      </div>
+    </div>
+  </footer>
+
     <script src="home.js"></script>
+    <script>
+    lucide.createIcons();
+
+    // Functionality on "Buffer" text/logo
+    const brand = document.getElementById("brandTrigger");
+
+    brand.addEventListener("click", () => {
+      alert("🚀 Buffer clicked! Redirect, animation, or modal can go here.");
+      // Example redirect:
+      // window.location.href = "/";
+    });
+  </script>
 </body>
 </html>
