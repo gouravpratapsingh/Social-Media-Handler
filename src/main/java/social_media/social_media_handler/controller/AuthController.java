@@ -14,7 +14,7 @@ import social_media.social_media_handler.util.JwtUtil;
 
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
