@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Social Media Dashboard</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+    <!-- TOP NAV -->
+<nav class="bg-white border-b">
+  <div class="flex items-center justify-between px-6 py-4">
+
+    <!-- LEFT SIDE -->
+    <div class="flex items-center space-x-8">
+
+      <!-- LOGO -->
+      <div class="flex items-center space-x-2">
+        <img src="assets/graphuralogo.png" alt="graphura Logo" class="h-14 w-auto">
+      </div>
+
+      <!-- NAV LINKS -->
+      <div class="flex space-x-6 font-medium" id="navLinks">
+        
+        <a href="main.html"
+          data-page="publish"
+          class="nav-item text-blue-600 border-b-2 border-blue-600 pb-1">
+          Publish
+        </a>
+        <a
+          href="statistics.html"
+          data-page="statistics"
+          class="nav-item text-gray-500 hover:text-blue-600 transition pb-1">
+          Statistics
+        </a>
+
+        <a href="#"
+          data-page="start"
+          class="nav-item text-gray-500 hover:text-blue-600 transition pb-1">
+          Start Page
+          </a>
+        
+      </div>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <button
+      onclick="alert('New Post Clicked')"
+      class="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">
+      + New
+    </button>
+
+  </div>
+</nav>
+
+  
+
+  <!-- MAIN -->
+  <main class="p-6 space-y-10">
+
+    <!-- STATS CARDS -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="bg-white p-6 rounded-xl shadow">
+        <p class="text-gray-500">Scheduled Posts</p>
+        <h2 class="text-3xl font-bold">24</h2>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow">
+        <p class="text-gray-500">Total Followers</p>
+        <h2 class="text-3xl font-bold">12.4K</h2>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow">
+        <p class="text-gray-500">Engagement Rate</p>
+        <h2 class="text-3xl font-bold">6.8%</h2>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow">
+        <p class="text-gray-500">Platforms Connected</p>
+        <h2 class="text-3xl font-bold">4</h2>
+      </div>
+    </section>
+
+    <!-- CHART SECTION -->
+    <section class="bg-white p-6 rounded-xl shadow">
+      <h3 class="text-xl font-semibold mb-4">Followers Growth</h3>
+      <canvas id="followersChart" height="120"></canvas>
+    </section>
+
+    <!-- PLATFORM STATUS -->
+    <section class="bg-white p-6 rounded-xl shadow">
+      <h3 class="text-xl font-semibold mb-4">Connected Platforms</h3>
+      <ul class="space-y-2">
+        <li>Instagram ✅</li>
+        <li>Facebook ✅</li>
+        <li>LinkedIn ✅</li>
+        <li>Twitter ❌</li>
+      </ul>
+    </section>
+
+    <!-- ANALYTICS DASHBOARD -->
+    <section class="bg-white p-6 rounded-xl shadow space-y-6">
+      <h3 class="text-2xl font-bold">Analytics Dashboard</h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-gray-50 p-4 rounded-lg text-center">
+          <p class="text-gray-500">Reach</p>
+          <h4 class="text-2xl font-bold">58K</h4>
+        </div>
+
+        <div class="bg-gray-50 p-4 rounded-lg text-center">
+          <p class="text-gray-500">Impressions</p>
+          <h4 class="text-2xl font-bold">112K</h4>
+        </div>
+
+        <div class="bg-gray-50 p-4 rounded-lg text-center">
+          <p class="text-gray-500">Engagement</p>
+          <h4 class="text-2xl font-bold">6.8%</h4>
+        </div>
+      </div>
+
+      <button
+        onclick="downloadPDF()"
+        class="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition">
+        📄 Download Analytics PDF
+      </button>
+    </section>
+
+  </main>
+
+  <!-- JS LOGIC -->
+  <script>
+    // Followers Growth Chart
+    const ctx = document.getElementById("followersChart").getContext("2d");
+
+    new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        datasets: [{
+          label: "Followers",
+          data: [2000, 3500, 5000, 7600, 9800, 12400],
+          borderWidth: 3,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        }
+      }
+    });
+
+    // PDF Download
+    function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF();
+
+      pdf.text("Social Media Analytics Report", 20, 20);
+      pdf.text("Followers Growth, Engagement & Reach Summary", 20, 40);
+      pdf.text("Generated via Dashboard", 20, 60);
+
+      pdf.save("analytics-report.pdf");
+    }
+  </script>
+  
+  <script>
+  const navItems = document.querySelectorAll(".nav-item");
+
+  function setActive(item) {
+    navItems.forEach(el => {
+      el.classList.remove(
+        "text-blue-600",
+        "border-b-2",
+        "border-blue-600"
+      );
+      el.classList.add("text-gray-500");
+    });
+
+    item.classList.add(
+      "text-blue-600",
+      "border-b-2",
+      "border-blue-600"
+    );
+    item.classList.remove("text-gray-500");
+  }
+
+  // Click handling
+  navItems.forEach(item => {
+    item.addEventListener("click", () => {
+      setActive(item);
+    });
+  });
+
+  // Page-based auto highlight (IMPORTANT)
+  const currentPage = window.location.pathname;
+
+  navItems.forEach(item => {
+    if (
+      item.dataset.page === "publish" && currentPage.includes("index") ||
+      item.dataset.page === "statistics" && currentPage.includes("statistics")
+    ) {
+      setActive(item);
+    }
+  });
+</script>
+
+</body>
+</html>
