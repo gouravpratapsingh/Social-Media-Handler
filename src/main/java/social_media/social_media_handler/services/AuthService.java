@@ -40,6 +40,7 @@ public class AuthService {
             return new SignupResponse("Email is already taken!",null);
         }
         User user = new User();
+        user.setPassword(signupRequest.getUsername());
         user.setEmail(signupRequest.getEmail());
 
         // Encrypt the password before saving
