@@ -15,6 +15,7 @@ import social_media.social_media_handler.util.JwtUtil;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     @Autowired

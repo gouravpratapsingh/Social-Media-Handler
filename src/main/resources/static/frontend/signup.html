@@ -60,90 +60,134 @@
             </div>
         </div>
     </div>
+    <div id="loadingOverlay" class="fixed inset-0 bg-black/50 z-50 flex flex-col items-center justify-center hidden">
+        <div class="w-16 h-16 border-4 border-white/20 border-t-blue-600 rounded-full animate-spin mb-4"></div>
+        <p id="loadingText" class="text-white font-bold text-lg">Creating your workspace...</p>
+    </div>
+    <script>
+    const form = document.getElementById('signupForm');
+    const usernameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const submitBtn = document.getElementById('submitBtn');
 
-    <script >
-        // script.js
-const form = document.getElementById('signupForm');
-const emailInput = document.getElementById('email');
-const passwordInput = document.getElementById('password');
-const submitBtn = document.getElementById('submitBtn');
+    // Error Elements
+    const nameError = document.getElementById('nameError');
+    const emailError = document.getElementById('emailError');
+    const passwordError = document.getElementById('passwordError');
 
-const emailError = document.getElementById('emailError');
-const passwordError = document.getElementById('passwordError');
+    // Overlay Elements
+    const overlay = document.getElementById('loadingOverlay');
+    const loadingText = document.getElementById('loadingText');
 
-function validateEmail(email) {
+    // --- 1. Validation Logic ---
+
+    function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
-}
+    }
 
-function updateButtonState() {
-    const isEmailValid = validateEmail(emailInput.value);
-    const isPasswordValid = passwordInput.value.length >= 8;
+    function validateUsername() {
+        const username = usernameInput.value.trim();
+        const usernameRegex = /^[a-zA-Z0-9_]{3,}$/;
 
-    if (isEmailValid && isPasswordValid) {
-        submitBtn.disabled = false;
-        submitBtn.classList.remove('bg-gray-200', 'text-gray-500', 'cursor-not-allowed');
-        submitBtn.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700', 'cursor-pointer');
-    } else {
+        if (username === "") {
+           nameError.textContent = "Username is required.";
+           nameError.classList.remove("hidden");
+          return false;
+        }
+        if (!usernameRegex.test(username)) {
+           nameError.textContent = "At least 3 characters (letters, numbers, underscores).";
+           nameError.classList.remove("hidden");
+           return false;
+        }
+        nameError.classList.add("hidden");
+        return true;
+    }
+
+    function updateButtonState() {
+        const isEmailValid = validateEmail(emailInput.value);
+        const isPasswordValid = passwordInput.value.length >= 8;
+        const isNameValid = usernameInput.value.trim().length >= 3;
+
+        if (isEmailValid && isPasswordValid && isNameValid) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('bg-gray-200', 'text-gray-500', 'cursor-not-allowed');
+            submitBtn.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700', 'cursor-pointer');
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('bg-gray-200', 'text-gray-500', 'cursor-not-allowed');
+            submitBtn.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700', 'cursor-pointer');
+        }
+    }
+
+    // --- 2. Event Listeners for Real-time Validation ---
+
+    usernameInput.addEventListener('input', () => { validateUsername(); updateButtonState(); });
+
+    emailInput.addEventListener('input', () => {
+        emailError.classList.toggle('hidden', !emailInput.value || validateEmail(emailInput.value));
+        updateButtonState();
+    });
+
+    passwordInput.addEventListener('input', () => {
+        passwordError.classList.toggle('hidden', !passwordInput.value || passwordInput.value.length >= 8);
+        updateButtonState();
+    });
+
+    // --- 3. The Integration, Loading Overlay, and Auto-Login ---
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const signupData = {
+            username: usernameInput.value.trim(),
+            email: emailInput.value.trim(),
+            password: passwordInput.value
+        };
+
+      try {
+        // 1. Show the Loading Overlay
+        overlay.classList.remove('hidden');
         submitBtn.disabled = true;
-        submitBtn.classList.add('bg-gray-200', 'text-gray-500', 'cursor-not-allowed');
-        submitBtn.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700', 'cursor-pointer');
-    }
-}
+        loadingText.innerText = "Creating your workspace...";
 
-// Event Listeners for Real-time validation
-emailInput.addEventListener('input', () => {
-    if (emailInput.value && !validateEmail(emailInput.value)) {
-        emailError.classList.remove('hidden');
-    } else {
-        emailError.classList.add('hidden');
-    }
-    updateButtonState();
-});
+        const response = await fetch('http://localhost:8080/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(signupData)
+        });
 
-passwordInput.addEventListener('input', () => {
-    if (passwordInput.value && passwordInput.value.length < 8) {
-        passwordError.classList.remove('hidden');
-    } else {
-        passwordError.classList.add('hidden');
-    }
-    updateButtonState();
-});
+        const result = await response.json();
 
-// Handle Submit
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    alert('Form submitted successfully! Email: ' + emailInput.value);
-});
- const usernameInput = document.getElementById("name");
-  const nameError = document.getElementById("nameError");
+        // Check response.ok AND the custom success boolean from your SignupResponse
+        if (response.ok && result.success) {
 
-  function validateUsername() {
-    const username = usernameInput.value.trim();
-    const usernameRegex = /^[a-zA-Z0-9_]{3,}$/;
+            // 2. AUTO-LOGIN: Save the token received in result
+            localStorage.setItem('authToken', result.token);
 
-    if (username === "") {
-      nameError.textContent = "Username is required.";
-      nameError.classList.remove("hidden");
-      return false;
-    }
+            // 3. Update overlay text for success
+            loadingText.innerText = "Account created! Logging you in...";
 
-    if (!usernameRegex.test(username)) {
-      nameError.textContent =
-        "Username must be at least 3 characters and contain only letters, numbers, or underscores.";
-      nameError.classList.remove("hidden");
-      return false;
-    }
+            // Small delay so user sees the success state before redirecting
+            setTimeout(() => {
+                window.location.href = 'main.html';
+            }, 1200);
 
-    nameError.classList.add("hidden");
-    return true;
-  }
-
-  // Real-time validation while typing
-  usernameInput.addEventListener("input", validateUsername);
-
-  // Optional: Validate on blur
-  usernameInput.addEventListener("blur", validateUsername);
+        } else {
+            // Hide overlay if signup failed
+            overlay.classList.add('hidden');
+            alert("Signup Failed: " + (result.message || "Email might be taken"));
+            submitBtn.disabled = false;
+        }
+      } catch (error) {
+        // Hide overlay if server is down
+        overlay.classList.add('hidden');
+        console.error('Error:', error);
+        alert("Server connection failed. Is the backend running?");
+        submitBtn.disabled = false;
+      }
+    });
     </script>
 </body>
 </html>

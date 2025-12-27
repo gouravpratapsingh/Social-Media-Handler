@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignupResponse{
+public class SignupResponse {
     private String message;
     private String email;
+    private String token; // The JWT for auto-login
+    private boolean success;
 }
