@@ -62,59 +62,39 @@
     </div>
 
     <script >
-        // script.js
-const form = document.getElementById('signupForm');
-const emailInput = document.getElementById('email');
-const passwordInput = document.getElementById('password');
-const submitBtn = document.getElementById('submitBtn');
+        // Handle Submit
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-const emailError = document.getElementById('emailError');
-const passwordError = document.getElementById('passwordError');
+            // Prepare the data object matching SignupRequest.java
+            const signupData = {
+                username: document.getElementById('name').value,
+                email: emailInput.value,
+                password: passwordInput.value
+            };
 
-function validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-}
+            try {
+                const response = await fetch('http://localhost:8080/auth/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(signupData)
+                });
 
-function updateButtonState() {
-    const isEmailValid = validateEmail(emailInput.value);
-    const isPasswordValid = passwordInput.value.length >= 8;
+                const result = await response.json();
 
-    if (isEmailValid && isPasswordValid) {
-        submitBtn.disabled = false;
-        submitBtn.classList.remove('bg-gray-200', 'text-gray-500', 'cursor-not-allowed');
-        submitBtn.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700', 'cursor-pointer');
-    } else {
-        submitBtn.disabled = true;
-        submitBtn.classList.add('bg-gray-200', 'text-gray-500', 'cursor-not-allowed');
-        submitBtn.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700', 'cursor-pointer');
-    }
-}
-
-// Event Listeners for Real-time validation
-emailInput.addEventListener('input', () => {
-    if (emailInput.value && !validateEmail(emailInput.value)) {
-        emailError.classList.remove('hidden');
-    } else {
-        emailError.classList.add('hidden');
-    }
-    updateButtonState();
-});
-
-passwordInput.addEventListener('input', () => {
-    if (passwordInput.value && passwordInput.value.length < 8) {
-        passwordError.classList.remove('hidden');
-    } else {
-        passwordError.classList.add('hidden');
-    }
-    updateButtonState();
-});
-
-// Handle Submit
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    alert('Form submitted successfully! Email: ' + emailInput.value);
-});
+                if (response.ok) {
+                    alert(result.message); // "User registered successfully!"
+                    window.location.href = 'login.html'; // Redirect to login page
+                } else {
+                    alert("Signup Failed: " + (result.message || "Error occurred"));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert("Cannot connect to the server. Make sure the backend is running.");
+            }
+        });
     </script>
 </body>
 </html>
