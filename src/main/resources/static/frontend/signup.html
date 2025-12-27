@@ -115,6 +115,35 @@ form.addEventListener('submit', (e) => {
     e.preventDefault();
     alert('Form submitted successfully! Email: ' + emailInput.value);
 });
+ const usernameInput = document.getElementById("name");
+  const nameError = document.getElementById("nameError");
+
+  function validateUsername() {
+    const username = usernameInput.value.trim();
+    const usernameRegex = /^[a-zA-Z0-9_]{3,}$/;
+
+    if (username === "") {
+      nameError.textContent = "Username is required.";
+      nameError.classList.remove("hidden");
+      return false;
+    }
+
+    if (!usernameRegex.test(username)) {
+      nameError.textContent =
+        "Username must be at least 3 characters and contain only letters, numbers, or underscores.";
+      nameError.classList.remove("hidden");
+      return false;
+    }
+
+    nameError.classList.add("hidden");
+    return true;
+  }
+
+  // Real-time validation while typing
+  usernameInput.addEventListener("input", validateUsername);
+
+  // Optional: Validate on blur
+  usernameInput.addEventListener("blur", validateUsername);
     </script>
 </body>
 </html>
