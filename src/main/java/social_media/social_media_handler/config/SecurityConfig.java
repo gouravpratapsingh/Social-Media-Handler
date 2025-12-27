@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/auth/**").permitAll() // Login/Signup [cite: 18-19]
                                 .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                                    .requestMatchers("/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/**/*.json", "/**/*.avif").permitAll()
                                 .anyRequest().authenticated()
                 );
 
