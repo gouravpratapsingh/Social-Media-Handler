@@ -19,16 +19,12 @@ import social_media.social_media_handler.util.JwtUtil;
 
 @Service
 public class AuthService {
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private AuthenticationManager authenticationManager;
-
     @Autowired
     private JwtUtil jwtUtils;
 
@@ -36,17 +32,41 @@ public class AuthService {
      * logic for User Signup
      */
     public SignupResponse signupUser(SignupRequest signupRequest) {
+        // 1. Check if user exists
         if (userRepository.findByEmail(signupRequest.getEmail()).isPresent()) {
-            return new SignupResponse("Email is already taken!",null);
+            return new SignupResponse("Email already exists!", null, null, false);
         }
-        User user = new User();
-        user.setUsername(signupRequest.getUsername());
-        user.setEmail(signupRequest.getEmail());
-        // Encrypt the password before saving
-        user.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
 
+        // 2. Create and Save User
+
+        // Generate random number (4 digits)
+        int randomNum = (int)(Math.random() * 10000000); // ensures 1000–9999
+        String customId = signupRequest.getUsername()+ "_" + randomNum;
+
+        // Ensure uniqueness by checking DB
+        while (userRepository.existsById(customId)) {
+            randomNum = (int)(Math.random() * 10000000);
+            customId = signupRequest.getUsername()+ "_" + randomNum;
+        }
+
+        User user = User.builder()
+                .id(customId)
+                .username(signupRequest.getUsername())
+                .email(signupRequest.getEmail())
+                .password(passwordEncoder.encode(signupRequest.getPassword()))
+                .build();
         User savedUser = userRepository.save(user);
-        return new SignupResponse("User registered successfully!",savedUser.getEmail());
+
+        // 3. Generate JWT immediately (Auto-Login)
+        String token = jwtUtils.generateToken(savedUser.getEmail());
+
+        // 4. Return response with token
+        return new SignupResponse(
+                "Account created! Logging you in...",
+                savedUser.getEmail(),
+                token,
+                true
+        );
     }
 
     /**
