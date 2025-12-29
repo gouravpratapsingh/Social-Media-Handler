@@ -22,7 +22,7 @@
 
                 <h1 class="text-3xl font-bold text-gray-900 mb-8">Log in</h1>
 
-                <form action="/auth/login"  id="loginForm" class="space-y-6" novalidate>
+                <form id="loginForm" class="space-y-6" novalidate>
                     <div>
                         <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
                         <input type="email" id="email"
@@ -84,6 +84,13 @@
     </div>
 
     <script>
+        // --- NEW: AUTO-REDIRECT IF LOGGED IN ---
+        window.onload = () => {
+            if (localStorage.getItem('authToken')) {
+                window.location.href = 'main.html';
+            }
+        };
+
         const form = document.getElementById('loginForm');
 
         form.addEventListener('submit', async (e) => {
@@ -91,7 +98,6 @@
             const emailInput = document.getElementById('email');
             const passwordInput = document.getElementById('password');
 
-            // 1. Client-side validation
             const isValid = validateInputs(emailInput, passwordInput);
 
             if (isValid) {
@@ -101,8 +107,7 @@
                 };
 
                 try {
-                    // 2. Fetch call to Java Backend
-                    const response = await fetch('http://localhost:8080/auth/login', {
+                    const response = await fetch('http://localhost:8081/auth/login', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(loginRequest)
@@ -111,16 +116,18 @@
                     const result = await response.json();
 
                     if (response.ok) {
-                        // 3. Store Token and Redirect
-                        localStorage.setItem('accessToken', result.token);
-                        alert("Login Successful!");
-                        window.location.href = '/main.html';
+                        // --- CHANGED: Use 'authToken' to match your main.html check ---
+                        localStorage.setItem('authToken', result.token);
+                        localStorage.setItem('userEmail', emailInput.value);
+                        localStorage.setItem('userName', result.name || 'User');
+                        // Redirect to main.html
+                        window.location.href = 'main.html';
                     } else {
                         alert("Login Failed: " + (result.message || "Invalid credentials"));
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    alert("Cannot connect to server. Ensure Backend is running and CORS is enabled.");
+                    alert("Cannot connect to server. Ensure Backend is running at :8081 and CORS is enabled.");
                 }
             }
         });
@@ -129,11 +136,19 @@
             let valid = true;
             const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
 
-            if (!email.value.match(emailPattern)) { toggleError('emailError', email, true); valid = false; }
-            else { toggleError('emailError', email, false); }
+            if (!email.value.match(emailPattern)) {
+                toggleError('emailError', email, true);
+                valid = false;
+            } else {
+                toggleError('emailError', email, false);
+            }
 
-            if (pass.value.length < 6) { toggleError('passwordError', pass, true); valid = false; }
-            else { toggleError('passwordError', pass, false); }
+            if (pass.value.length < 6) {
+                toggleError('passwordError', pass, true);
+                valid = false;
+            } else {
+                toggleError('passwordError', pass, false);
+            }
 
             return valid;
         }
