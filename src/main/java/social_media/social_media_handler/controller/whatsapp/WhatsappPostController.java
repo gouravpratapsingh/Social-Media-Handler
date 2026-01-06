@@ -1,4 +1,4 @@
-package social_media.social_media_handler.controller;
+package social_media.social_media_handler.controller.whatsapp;
 
 import java.util.List;
 
@@ -13,11 +13,11 @@ import social_media.social_media_handler.repository.whatsapp.WhatsAppScheduledPo
 
 @RestController
 @RequestMapping("/api/posts")
-public class PostController {
+public class WhatsappPostController {
 
     private final WhatsAppScheduledPostRepository repository;
 
-    public PostController(WhatsAppScheduledPostRepository repository) {
+    public WhatsappPostController(WhatsAppScheduledPostRepository repository) {
         this.repository = repository;
     }
 

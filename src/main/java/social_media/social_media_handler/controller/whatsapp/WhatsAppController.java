@@ -1,4 +1,4 @@
-package social_media.social_media_handler.controller;
+package social_media.social_media_handler.controller.whatsapp;
 
 import social_media.social_media_handler.dto.request.WhatsAppMessageRequest;
 import social_media.social_media_handler.services.whatsapp.WhatsAppService;
