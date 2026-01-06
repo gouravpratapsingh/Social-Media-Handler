@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import social_media.social_media_handler.entity.youtube.PostStatus;
 import social_media.social_media_handler.entity.youtube.ScheduledPost;
 import social_media.social_media_handler.entity.youtube.YouTubeAccount;
-import social_media.social_media_handler.repository.youtube.ScheduledPostRepository;
+import social_media.social_media_handler.repository.youtube.YouTubeScheduledPostRepository;
 import social_media.social_media_handler.repository.youtube.YouTubeAccountRepository;
 import social_media.social_media_handler.services.youtube.YouTubeUploadService;
 
@@ -21,7 +21,7 @@ import java.util.List;
 @Slf4j
 public class YouTubePostScheduler {
 
-    private final ScheduledPostRepository postRepository;
+    private final YouTubeScheduledPostRepository postRepository;
     private final YouTubeAccountRepository accountRepository;
     private final YouTubeUploadService uploadService;
 
