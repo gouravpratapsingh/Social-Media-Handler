@@ -1,23 +1,26 @@
 package social_media.social_media_handler.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import social_media.social_media_handler.entity.youtube.YouTubeAccount;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class User {
+
     @Id
-    @Column(name = "userId")
+    @Column(name = "user_id", nullable = false, updatable = false)
     private String id;
 
-    @Column(name = "Username")
+    @Column(name = "username", nullable = false)
     private String username;
 
     @Column(unique = true, nullable = false)
@@ -25,4 +28,28 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    /**
+     * One User → Many YouTube Accounts
+     */
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @Builder.Default
+    private List<YouTubeAccount> youtubeAccounts = new ArrayList<>();
+
+    /* ================= Helper methods ================= */
+
+    public void addYouTubeAccount(YouTubeAccount account) {
+        youtubeAccounts.add(account);
+        account.setUser(this);
+    }
+
+    public void removeYouTubeAccount(YouTubeAccount account) {
+        youtubeAccounts.remove(account);
+        account.setUser(null);
+    }
 }

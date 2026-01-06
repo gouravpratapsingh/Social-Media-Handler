@@ -2,8 +2,9 @@ package social_media.social_media_handler;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-
+@EnableScheduling
 @SpringBootApplication
 public class MyappApplication {
     public static void main(String[] args) {

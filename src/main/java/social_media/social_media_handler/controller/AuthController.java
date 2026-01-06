@@ -5,10 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import social_media.social_media_handler.dto.request.LoginRequest;
-import social_media.social_media_handler.dto.request.SignupRequest;
-import social_media.social_media_handler.dto.response.LoginResponse;
-import social_media.social_media_handler.dto.response.SignupResponse;
+import social_media.social_media_handler.dto.AuthenticationRequest.LoginRequest;
+import social_media.social_media_handler.dto.AuthenticationRequest.SignupRequest;
+import social_media.social_media_handler.dto.AuthenticationResponse.LoginResponse;
+import social_media.social_media_handler.dto.AuthenticationResponse.SignupResponse;
 import social_media.social_media_handler.services.AuthService;
 import social_media.social_media_handler.util.JwtUtil;
 
