@@ -1,7 +1,7 @@
 package social_media.social_media_handler.controller;
 
 import social_media.social_media_handler.dto.request.WhatsAppMessageRequest;
-import social_media.social_media_handler.services.WhatsAppService;
+import social_media.social_media_handler.services.whatsapp.WhatsAppService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

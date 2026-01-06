@@ -1,4 +1,4 @@
-package social_media.social_media_handler.entity;
+package social_media.social_media_handler.entity.whatsapp;
 
 import java.time.LocalDateTime;
 
@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "scheduled_posts")
-public class ScheduledPost {
+public class WhatsAppScheduledPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,11 +27,11 @@ public class ScheduledPost {
     private String status; // "PENDING", "SENT", "FAILED", "DRAFT" [cite: 47, 94]
 
     // 1. Default Constructor (JPA ke liye zaroori hai)
-    public ScheduledPost() {
+    public WhatsAppScheduledPost() {
     }
 
     // 2. Parameterized Constructor (Data save karne ke liye easy rehta hai)
-    public ScheduledPost(String platform, String recipient, String content, LocalDateTime scheduledTime, String status) {
+    public WhatsAppScheduledPost(String platform, String recipient, String content, LocalDateTime scheduledTime, String status) {
         this.platform = platform;
         this.recipient = recipient;
         this.content = content;

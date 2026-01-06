@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import social_media.social_media_handler.entity.youtube.PostStatus;
-import social_media.social_media_handler.entity.youtube.ScheduledPost;
+import social_media.social_media_handler.entity.youtube.YouTubeScheduledPost;
 import social_media.social_media_handler.entity.youtube.YouTubeAccount;
 import social_media.social_media_handler.repository.youtube.YouTubeScheduledPostRepository;
 import social_media.social_media_handler.repository.youtube.YouTubeAccountRepository;
@@ -28,14 +28,14 @@ public class YouTubePostScheduler {
     @Scheduled(cron = "0 * * * * *") // every minute
     public void autoPublish() {
 
-        List<ScheduledPost> posts =
+        List<YouTubeScheduledPost> posts =
                 postRepository.findByPlatformAndStatusAndScheduledAtLessThanEqual(
                         "YOUTUBE",
                         PostStatus.PENDING,
                         LocalDateTime.now()
                 );
 
-        for (ScheduledPost post : posts) {
+        for (YouTubeScheduledPost post : posts) {
             try {
                 post.setStatus(PostStatus.PROCESSING);
                 postRepository.save(post);

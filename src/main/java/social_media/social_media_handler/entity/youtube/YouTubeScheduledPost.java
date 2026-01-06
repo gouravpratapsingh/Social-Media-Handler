@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ScheduledPost {
+public class YouTubeScheduledPost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
