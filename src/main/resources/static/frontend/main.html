@@ -200,6 +200,42 @@
   </main>
   
 </div>
+
+<div id="postModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-[100] flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div class="p-6 border-b flex justify-between items-center bg-gray-50">
+            <h3 class="text-xl font-bold text-gray-800">Schedule New Post</h3>
+            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+        </div>
+        <form id="scheduleForm" class="p-6 space-y-4">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Platform</label>
+                <select id="platform" class="w-full border rounded-lg p-2.5 bg-white focus:ring-2 focus:ring-blue-500">
+                    <option value="WHATSAPP">WhatsApp</option>
+                    <option value="INSTAGRAM">Instagram</option>
+                    <option value="FACEBOOK">Facebook</option> </select>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Recipient Number</label>
+                <input type="text" id="recipient" placeholder="e.g. 919876543210" class="w-full border rounded-lg p-2.5" required>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Message Content</label>
+                <textarea id="content" rows="4" class="w-full border rounded-lg p-2.5" placeholder="Type your message here..." required></textarea>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1">Schedule Time</label>
+                <input type="datetime-local" id="scheduledTime" class="w-full border rounded-lg p-2.5" required>
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button type="button" onclick="closeModal()" class="flex-1 px-4 py-2 border rounded-lg font-semibold text-gray-600 hover:bg-gray-50">Cancel</button>
+                <button type="submit" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700">Schedule Now</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
     function logout() {
       localStorage.removeItem('authToken');
@@ -236,6 +272,116 @@ document.addEventListener("click", () => {
 profileMenu.addEventListener("click", (e) => {
   e.stopPropagation();
 });
+
+// Modal control functions
+function openModal() {
+    document.getElementById('postModal').classList.remove('hidden');
+}
+
+function closeModal() {
+    document.getElementById('postModal').classList.add('hidden');
+    document.getElementById('scheduleForm').reset();
+}
+
+// Attach openModal to your "New Post" button
+document.querySelectorAll('button').forEach(btn => {
+    if(btn.innerText.includes('New Post') || btn.innerText.includes('Schedule Post')) {
+        btn.onclick = openModal;
+    }
+});
+// Form Submission
+document.getElementById('scheduleForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const postData = {
+        platform: document.getElementById('platform').value,
+        recipient: document.getElementById('recipient').value,
+        content: document.getElementById('content').value,
+        scheduledTime: document.getElementById('scheduledTime').value,
+        status: "PENDING"
+    };
+
+    try {
+        const response = await fetch('http://localhost:8082/api/posts/schedule', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+            },
+            body: JSON.stringify(postData)
+        });
+
+        if (response.ok) {
+            alert("✅ Post scheduled successfully!");
+            closeModal();
+            loadPosts(); // UI refresh karne ke liye
+        } else {
+            const errorData = await response.json();
+            alert("❌ Error: " + (errorData.message || "Failed to schedule post"));        }
+    } catch (error) {
+        console.error("Error sending data:", error);
+        alert("Server se connection fail ho gaya.");
+    }
+});
+async function loadPosts() {
+    const listView = document.getElementById('listViewContent');
+    const contentArea = document.getElementById('contentArea');
+    try {
+        const response = await fetch('http://localhost:8082/api/posts/all', {
+            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('authToken') }
+        });
+        const posts = await response.json();
+
+        if (posts.length === 0) {
+            listView.innerHTML = `<p class="text-gray-500 italic text-center">No posts found.</p>`;
+            if(contentArea) contentArea.classList.remove('hidden');
+            return;
+        }
+            if(contentArea) contentArea.classList.add('hidden');
+        let tableHtml = `
+            <table class="w-full text-left text-sm">
+                <thead class="bg-gray-50 text-gray-600 uppercase text-xs font-bold">
+                    <tr>
+                        <th class="p-4">Recipient</th>
+                        <th class="p-4">Message</th>
+                        <th class="p-4">Platform</th>
+                        <th class="p-4">Time</th>
+                        <th class="p-4">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y">
+        `;
+
+        posts.forEach(post => {
+            const statusClass = post.status === 'SENT' ? 'text-green-600 bg-green-50' : 
+                                post.status === 'FAILED' ? 'text-red-600 bg-red-50' : 'text-blue-600 bg-blue-50';
+            
+            const platformClass = post.platform === 'FACEBOOK' ? 'text-blue-800 font-bold' : '';
+            tableHtml += `
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="p-4 font-medium">${post.recipient}</td>
+                    <td class="p-4 text-gray-600 italic max-w-xs truncate" title="${post.content}">
+                        ${post.content}
+                    </td>
+                    <td class="p-4">${post.platform}</td>
+                    <td class="p-4">${new Date(post.scheduledTime).toLocaleString()}</td>
+                    <td class="p-4">
+                        <span class="px-2 py-1 rounded-md text-xs font-bold ${statusClass}">${post.status}</span>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tableHtml += `</tbody></table>`;
+        listView.innerHTML = tableHtml;
+
+    } catch (error) {
+        console.error("Fetch error:", error);
+    }
+}
+
+// Page load par posts load karein
+window.addEventListener('DOMContentLoaded', loadPosts);
   </script>
  <script src="component/sidebar.js"></script>
 <script src="main.js"></script>

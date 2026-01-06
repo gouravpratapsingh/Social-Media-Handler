@@ -1,5 +1,8 @@
 package social_media.social_media_handler.config;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,9 +17,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -33,7 +33,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for local development/testing
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll() // ALLOW SIGNUP AND LOGIN
+.requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll() // Pre-flight requests allow karein
+    .requestMatchers("/auth/**", "/api/whatsapp/**", "/api/posts/**").permitAll()
+                       // .requestMatchers("/auth/**").permitAll() // ALLOW SIGNUP AND LOGIN
+                        //.requestMatchers("/api/whatsapp/**").permitAll() 
+                    //.requestMatchers("/api/posts/**").permitAll()
                         .anyRequest().authenticated()           // PROTECT EVERYTHING ELSE
                 )
                 .sessionManagement(session -> session
