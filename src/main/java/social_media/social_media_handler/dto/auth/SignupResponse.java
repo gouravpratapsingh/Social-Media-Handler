@@ -1,4 +1,4 @@
-package social_media.social_media_handler.dto.AuthenticationResponse;
+package social_media.social_media_handler.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
