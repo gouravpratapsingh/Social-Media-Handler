@@ -1,4 +1,4 @@
-package social_media.social_media_handler.services.whatsapp;
+package social_media.social_media_handler.service.whatsapp;
 
 import social_media.social_media_handler.config.WhatsAppConfig;
 import org.springframework.http.*;
