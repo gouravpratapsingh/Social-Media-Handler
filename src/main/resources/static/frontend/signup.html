@@ -65,6 +65,13 @@
         <p id="loadingText" class="text-white font-bold text-lg">Creating your workspace...</p>
     </div>
     <script>
+    // Auto-redirect if already logged in
+    window.addEventListener('load', () => {
+        if (localStorage.getItem('authToken')) {
+            window.location.href = 'main.html';
+        }
+    });
+
     const form = document.getElementById('signupForm');
     const usernameInput = document.getElementById('name');
     const emailInput = document.getElementById('email');
