@@ -10,10 +10,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import social_media.social_media_handler.dto.request.LoginRequest;
-import social_media.social_media_handler.dto.request.SignupRequest;
-import social_media.social_media_handler.dto.response.LoginResponse;
-import social_media.social_media_handler.dto.response.SignupResponse;
+import social_media.social_media_handler.dto.AuthenticationRequest.LoginRequest;
+import social_media.social_media_handler.dto.AuthenticationRequest.SignupRequest;
+import social_media.social_media_handler.dto.AuthenticationResponse.LoginResponse;
+import social_media.social_media_handler.dto.AuthenticationResponse.SignupResponse;
 import social_media.social_media_handler.entity.User;
 import social_media.social_media_handler.exception.ResourceNotFoundException;
 import social_media.social_media_handler.repository.UserRepository;
@@ -60,7 +60,7 @@ public class AuthService implements UserDetailsService {
         // 3. Generate JWT immediately (Auto-Login)
         String token = jwtUtils.generateToken(savedUser.getEmail());
 
-        // 4. Return response with token
+        // 4. Return AuthenticationResponse with token
         return new SignupResponse(
                 "Account created! Logging you in...",
                 savedUser.getEmail(),

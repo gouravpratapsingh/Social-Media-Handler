@@ -1,4 +1,4 @@
-package social_media.social_media_handler.services;
+package social_media.social_media_handler.schedular.whatsapp;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -6,25 +6,26 @@ import java.util.List;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import social_media.social_media_handler.entity.ScheduledPost;
-import social_media.social_media_handler.repository.ScheduledPostRepository;
+import social_media.social_media_handler.entity.whatsapp.WhatsAppScheduledPost;
+import social_media.social_media_handler.repository.whatsapp.WhatsAppScheduledPostRepository;
+import social_media.social_media_handler.services.whatsapp.WhatsAppService;
 
 @Service
-public class PostSchedulerService {
+public class WhatsAppPostScheduler {
 
-    private final ScheduledPostRepository repository;
+    private final WhatsAppScheduledPostRepository repository;
     private final WhatsAppService whatsappService;
 
-    public PostSchedulerService(ScheduledPostRepository repository, WhatsAppService whatsappService) {
+    public WhatsAppPostScheduler(WhatsAppScheduledPostRepository repository, WhatsAppService whatsappService) {
         this.repository = repository;
         this.whatsappService = whatsappService;
     }
 
     @Scheduled(fixedRate = 60000)
     public void runAutomation() {
-        List<ScheduledPost> pendingList = repository.findByStatusAndScheduledTimeBefore("PENDING", LocalDateTime.now());
+        List<WhatsAppScheduledPost> pendingList = repository.findByStatusAndScheduledTimeBefore("PENDING", LocalDateTime.now());
 
-        for (ScheduledPost post : pendingList) {
+        for (WhatsAppScheduledPost post : pendingList) {
             try {
                 if ("WHATSAPP".equalsIgnoreCase(post.getPlatform())) {
                     whatsappService.sendMessage(post.getRecipient(), post.getContent());

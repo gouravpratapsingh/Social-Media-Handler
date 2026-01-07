@@ -36,3 +36,7 @@ build/
 node/
 node_modules/
 uploads/
+
+# Secrets
+application.properties
+.env

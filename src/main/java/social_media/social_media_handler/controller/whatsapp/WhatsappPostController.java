@@ -1,4 +1,4 @@
-package social_media.social_media_handler.controller;
+package social_media.social_media_handler.controller.whatsapp;
 
 import java.util.List;
 
@@ -8,27 +8,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import social_media.social_media_handler.entity.ScheduledPost;
-import social_media.social_media_handler.repository.ScheduledPostRepository;
+import social_media.social_media_handler.entity.whatsapp.WhatsAppScheduledPost;
+import social_media.social_media_handler.repository.whatsapp.WhatsAppScheduledPostRepository;
 
 @RestController
 @RequestMapping("/api/posts")
-public class PostController {
+public class WhatsappPostController {
 
-    private final ScheduledPostRepository repository;
+    private final WhatsAppScheduledPostRepository repository;
 
-    public PostController(ScheduledPostRepository repository) {
+    public WhatsappPostController(WhatsAppScheduledPostRepository repository) {
         this.repository = repository;
     }
 
     @PostMapping("/schedule")
-    public ScheduledPost scheduleNewPost(@RequestBody ScheduledPost post) {
+    public WhatsAppScheduledPost scheduleNewPost(@RequestBody WhatsAppScheduledPost post) {
         post.setStatus("PENDING");
         return repository.save(post);
     }
 
     @GetMapping("/all")
-    public List<ScheduledPost> getAllPosts() {
+    public List<WhatsAppScheduledPost> getAllPosts() {
         return repository.findAll();
     }
 }
