@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import social_media.social_media_handler.repository.youtube.YouTubeAccountRepository;
-import social_media.social_media_handler.services.youtube.YouTubeAnalyticsService;
+import social_media.social_media_handler.service.youtube.YouTubeAnalyticsService;
 
 @Component
 @RequiredArgsConstructor

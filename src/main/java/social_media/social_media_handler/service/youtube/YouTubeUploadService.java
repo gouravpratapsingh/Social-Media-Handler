@@ -1,4 +1,4 @@
-package social_media.social_media_handler.services.youtube;
+package social_media.social_media_handler.service.youtube;
 
 
 

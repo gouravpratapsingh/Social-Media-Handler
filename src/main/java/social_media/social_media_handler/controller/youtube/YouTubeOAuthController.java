@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import social_media.social_media_handler.entity.User;
-import social_media.social_media_handler.services.youtube.YouTubeAuthService;
+import social_media.social_media_handler.service.youtube.YouTubeAuthService;
 
 @RestController
 @RequestMapping("/oauth/youtube")
