@@ -28,8 +28,7 @@ public class YouTubeOAuthController {
     }
 
     private User getLoggedInUser() {
-        Authentication auth =
-                SecurityContextHolder.getContext().getAuthentication();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return (User) auth.getPrincipal();
     }
 }
