@@ -1,4 +1,4 @@
-package social_media.social_media_handler.services;
+package social_media.social_media_handler.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +10,20 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import social_media.social_media_handler.dto.AuthenticationRequest.LoginRequest;
-import social_media.social_media_handler.dto.AuthenticationRequest.SignupRequest;
-import social_media.social_media_handler.dto.AuthenticationResponse.LoginResponse;
-import social_media.social_media_handler.dto.AuthenticationResponse.SignupResponse;
+import social_media.social_media_handler.dto.auth.LoginRequest;
+import social_media.social_media_handler.dto.auth.SignupRequest;
+import social_media.social_media_handler.dto.auth.LoginResponse;
+import social_media.social_media_handler.dto.auth.SignupResponse;
 import social_media.social_media_handler.entity.User;
 import social_media.social_media_handler.exception.ResourceNotFoundException;
 import social_media.social_media_handler.repository.UserRepository;
+import social_media.social_media_handler.service.email.EmailService;
+import social_media.social_media_handler.util.AuthEmailTemplateUtil;
 import social_media.social_media_handler.util.JwtUtil;
+import social_media.social_media_handler.util.PasswordEmailTemplateUtil;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class AuthService implements UserDetailsService {
@@ -27,6 +33,8 @@ public class AuthService implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private JwtUtil jwtUtils;
+    @Autowired
+    private EmailService emailService;
 
     /**
      * logic for User Signup
@@ -60,6 +68,13 @@ public class AuthService implements UserDetailsService {
         // 3. Generate JWT immediately (Auto-Login)
         String token = jwtUtils.generateToken(savedUser.getEmail());
 
+        // ✅ EMAIL ON SIGNUP
+        emailService.sendEmail(
+                user.getEmail(),
+                "🎉 Welcome to Social Media Handler",
+                AuthEmailTemplateUtil.signupSuccess(user.getUsername())
+        );
+
         // 4. Return AuthenticationResponse with token
         return new SignupResponse(
                 "Account created! Logging you in...",
@@ -89,9 +104,17 @@ public class AuthService implements UserDetailsService {
         //Generate JWT
         String jwt = jwtUtils.generateToken(request.getEmail());
 
+        // ✅ EMAIL ON LOGIN
+        emailService.sendEmail(
+                user.getEmail(),
+                "🔐 New Login Detected",
+                AuthEmailTemplateUtil.loginAlert(user.getUsername())
+        );
+
         return new LoginResponse(jwt, user.getEmail(), "Login Successfully");
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
@@ -101,5 +124,44 @@ public class AuthService implements UserDetailsService {
                 .password(user.getPassword())
                 .roles("USER") // or get from user if you have roles
                 .build();
+    }
+
+
+    // ===============================
+    // FORGOT PASSWORD
+    // ===============================
+
+    public void forgotPassword(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String token = UUID.randomUUID().toString();
+
+        user.setResetToken(token);
+        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(15));
+
+        userRepository.save(user);
+
+        String resetLink = "http://localhost:3000/reset-password?token=" + token;
+
+        emailService.sendEmail( user.getEmail(), "🔐 Reset Your Password",
+                PasswordEmailTemplateUtil.resetPassword(user.getUsername(), resetLink));
+    }
+
+    public void resetPassword(String token, String newPassword) {
+
+        User user = userRepository.findByResetToken(token)
+                .orElseThrow(() -> new RuntimeException("Invalid token"));
+
+        if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Token expired");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
+
+        userRepository.save(user);
     }
 }

@@ -1,4 +1,4 @@
-package social_media.social_media_handler.dto.request;
+package social_media.social_media_handler.dto.whatsapp;
 
 public class WhatsAppMessageRequest {
 

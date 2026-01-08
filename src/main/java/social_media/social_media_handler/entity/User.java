@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import social_media.social_media_handler.entity.youtube.YouTubeAccount;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,15 +30,15 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    // 🔐 FORGOT PASSWORD
+    private String resetToken;
+
+    private LocalDateTime resetTokenExpiry;
+
     /**
      * One User → Many YouTube Accounts
      */
-    @OneToMany(
-            mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     private List<YouTubeAccount> youtubeAccounts = new ArrayList<>();
 

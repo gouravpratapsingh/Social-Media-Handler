@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import social_media.social_media_handler.entity.whatsapp.WhatsAppScheduledPost;
 import social_media.social_media_handler.repository.whatsapp.WhatsAppScheduledPostRepository;
-import social_media.social_media_handler.services.whatsapp.WhatsAppService;
+import social_media.social_media_handler.service.whatsapp.WhatsAppService;
 
 @Service
 public class WhatsAppPostScheduler {
