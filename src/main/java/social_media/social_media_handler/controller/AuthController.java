@@ -3,24 +3,18 @@ package social_media.social_media_handler.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import social_media.social_media_handler.dto.auth.*;
 import social_media.social_media_handler.service.AuthService;
-import social_media.social_media_handler.util.JwtUtil;
 
 
 @RestController
-@RequestMapping("/auth")
 @CrossOrigin(origins = "*")
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
     private AuthService authService;
-    @Autowired
-    private PasswordEncoder encoder;
-    @Autowired
-    private JwtUtil jwtUtils;
 
     // ===============================
     // LOGIN AND SIGNUP
