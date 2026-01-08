@@ -3,9 +3,7 @@ package social_media.social_media_handler.controller.youtube;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import social_media.social_media_handler.entity.User;
 import social_media.social_media_handler.service.youtube.YouTubeAuthService;
 
 @RestController
@@ -20,16 +18,17 @@ public class YouTubeOAuthController {
         response.sendRedirect(authService.getAuthorizationUrl());
     }
 
-   @GetMapping("/callback")
-public void callback(@RequestParam String code, HttpServletResponse response) throws Exception {
-    User user = getLoggedInUser();
-    authService.handleCallback(code, user);
-    // Redirect back to your frontend dashboard
-    response.sendRedirect("/main.html"); 
-}
+    @GetMapping("/callback")
+    public void callback(
+            @RequestParam String code,
+            Authentication authentication,
+            HttpServletResponse response
+    ) throws Exception {
 
-    private User getLoggedInUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return (User) auth.getPrincipal();
+        String email = authentication.getName(); // SAFE
+        authService.handleCallback(code, email);
+
+        response.sendRedirect("http://localhost:8081/main.html");
     }
+
 }
