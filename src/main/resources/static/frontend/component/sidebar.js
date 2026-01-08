@@ -59,12 +59,18 @@ function initSidebarLogic() {
 async function connectChannel(channel) {
   console.log("Connecting:", channel);
 
+  if (channel === "youtube") {
+    // Correct the path to match YouTubeOAuthController.java
+    window.location.href = "/oauth/youtube/connect"; 
+    return;
+  }
+
+  // Fallback for other channels
   await fetch("/api/channels/connect", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ channel })
   });
 }
-
 loadSidebar();
 

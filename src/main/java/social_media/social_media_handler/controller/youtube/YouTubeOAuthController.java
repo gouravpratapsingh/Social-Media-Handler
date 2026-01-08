@@ -20,12 +20,13 @@ public class YouTubeOAuthController {
         response.sendRedirect(authService.getAuthorizationUrl());
     }
 
-    @GetMapping("/callback")
-    public String callback(@RequestParam String code) throws Exception {
-        User user = getLoggedInUser();
-        authService.handleCallback(code, user);
-        return "YouTube Connected Successfully";
-    }
+   @GetMapping("/callback")
+public void callback(@RequestParam String code, HttpServletResponse response) throws Exception {
+    User user = getLoggedInUser();
+    authService.handleCallback(code, user);
+    // Redirect back to your frontend dashboard
+    response.sendRedirect("/main.html"); 
+}
 
     private User getLoggedInUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
