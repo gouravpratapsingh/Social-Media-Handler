@@ -34,11 +34,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth -> auth.requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll() // Pre-flight requests allow karein
 //                        .requestMatchers("/auth/**", "/api/whatsapp/**", "/api/posts/**","/ping","/oauth/youtube").permitAll()
-                                .requestMatchers("/auth/**").permitAll() // ALLOW LOGIN AND SIGNUP
+                                .requestMatchers("/auth/**").permitAll()  //ALLOW LOGIN AND SIGNUP
                                 .requestMatchers("/api/whatsapp/**").permitAll()
                                 .requestMatchers("/api/posts/**").permitAll()
-                                .requestMatchers("/ping").permitAll()
                                 .requestMatchers("/oauth/youtube/**").permitAll()
+                                .requestMatchers("/youtube/analytics/**").permitAll()
+                                .requestMatchers("/oauth/linkedin/**").permitAll()
+                                .requestMatchers("/linkedin/analytics/**").permitAll()
                                 .anyRequest().authenticated() // PROTECT EVERYTHING ELSE
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // We use JWT
