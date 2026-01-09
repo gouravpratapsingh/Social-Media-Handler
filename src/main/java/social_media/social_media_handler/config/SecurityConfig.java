@@ -33,11 +33,13 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
                 .authorizeHttpRequests(
                         auth -> auth.requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll() // Pre-flight requests allow karein
-                        .requestMatchers("/auth/**", "/api/whatsapp/**", "/api/posts/**").permitAll()
-                        //.requestMatchers("/auth/**").permitAll() // ALLOW SIGNUP AND LOGIN
-                        // .requestMatchers("/api/whatsapp/**").permitAll()
-                        //.requestMatchers("/api/posts/**").permitAll()
-                        .anyRequest().authenticated() // PROTECT EVERYTHING ELSE
+//                        .requestMatchers("/auth/**", "/api/whatsapp/**", "/api/posts/**","/ping","/oauth/youtube").permitAll()
+                                .requestMatchers("/auth/**").permitAll() // ALLOW LOGIN AND SIGNUP
+                                .requestMatchers("/api/whatsapp/**").permitAll()
+                                .requestMatchers("/api/posts/**").permitAll()
+                                .requestMatchers("/ping").permitAll()
+                                .requestMatchers("/oauth/youtube/**").permitAll()
+                                .anyRequest().authenticated() // PROTECT EVERYTHING ELSE
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // We use JWT
                 );

@@ -9,7 +9,7 @@ import social_media.social_media_handler.service.youtube.YouTubeAuthService;
 @RestController
 @RequestMapping("/oauth/youtube")
 @RequiredArgsConstructor
-public class YouTubeOAuthController {
+public class YouTubeOAuthController{
 
     private final YouTubeAuthService authService;
 
@@ -20,15 +20,11 @@ public class YouTubeOAuthController {
 
     @GetMapping("/callback")
     public void callback(
-            @RequestParam String code,
-            Authentication authentication,
-            HttpServletResponse response
+            @RequestParam String code, Authentication authentication, HttpServletResponse response
     ) throws Exception {
-
         String email = authentication.getName(); // SAFE
         authService.handleCallback(code, email);
-
-        response.sendRedirect("http://localhost:8081/main.html");
+        response.sendRedirect("http://localhost:8082/main.html");
     }
 
 }
