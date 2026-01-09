@@ -1,6 +1,7 @@
 package social_media.social_media_handler.service.youtube;
 
-import com.google.api.client.googleapis.auth.oauth2.*;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import social_media.social_media_handler.config.YouTubeConfig;
 import social_media.social_media_handler.entity.User;
 import social_media.social_media_handler.entity.youtube.YouTubeAccount;
+import social_media.social_media_handler.repository.UserRepository;
 import social_media.social_media_handler.repository.youtube.YouTubeAccountRepository;
 
 import java.time.LocalDateTime;
@@ -17,41 +19,56 @@ import java.time.LocalDateTime;
 public class YouTubeAuthService {
 
     private final YouTubeConfig config;
-    private final YouTubeAccountRepository repository;
+    private final YouTubeAccountRepository youtubeAccountRepository;
+    private final UserRepository userRepository;
 
+    /**
+     * Step 1: Generate Google OAuth URL
+     */
     public String getAuthorizationUrl() {
+
         return "https://accounts.google.com/o/oauth2/v2/auth"
-                + "?client_id=" + config.clientId
-                + "&redirect_uri=" + config.redirectUri
+                + "?client_id=" + config.getClientId()
+                + "&redirect_uri=" + config.getRedirectUri()
                 + "&response_type=code"
-                + "&scope=https://www.googleapis.com/auth/youtube.upload "
+                + "&access_type=offline"
+                + "&prompt=consent"
+                + "&scope="
+                + "https://www.googleapis.com/auth/youtube.upload "
                 + "https://www.googleapis.com/auth/youtube.readonly "
                 + "https://www.googleapis.com/auth/yt-analytics.readonly";
     }
 
-    public void handleCallback(String code, User user) throws Exception {
+    /**
+     * Step 2: Handle OAuth callback
+     */
+    public void handleCallback(String code, String email) throws Exception {
 
-        GoogleTokenResponse tokenResponse =
-                new GoogleAuthorizationCodeTokenRequest(
+        // Fetch logged-in user
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Exchange code for access token
+        GoogleTokenResponse tokenResponse = new GoogleAuthorizationCodeTokenRequest(
                         GoogleNetHttpTransport.newTrustedTransport(),
                         GsonFactory.getDefaultInstance(),
                         "https://oauth2.googleapis.com/token",
-                        config.clientId,
-                        config.clientSecret,
+                        config.getClientId(),
+                        config.getClientSecret(),
                         code,
-                        config.redirectUri
+                        config.getRedirectUri()
                 ).execute();
 
-        YouTubeAccount account = repository
-                .findByUser_Id(user.getId())
-                .orElse(new YouTubeAccount());
+        // Fetch or create YouTube account
+        YouTubeAccount account = youtubeAccountRepository.findByUser_Id(user.getId()).orElse(new YouTubeAccount());
 
+        account.setUser(user);
         account.setAccessToken(tokenResponse.getAccessToken());
         account.setRefreshToken(tokenResponse.getRefreshToken());
-        account.setTokenExpiry(LocalDateTime.now()
-                .plusSeconds(tokenResponse.getExpiresInSeconds()));
-        account.setUser(user);
+        account.setTokenExpiry(
+                LocalDateTime.now().plusSeconds(tokenResponse.getExpiresInSeconds())
+        );
 
-        repository.save(account);
+        youtubeAccountRepository.save(account);
     }
 }
