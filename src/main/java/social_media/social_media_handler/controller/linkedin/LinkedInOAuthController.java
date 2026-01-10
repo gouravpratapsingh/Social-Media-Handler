@@ -4,7 +4,11 @@ package social_media.social_media_handler.controller.linkedin;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication; // Added import
+import social_media.social_media_handler.entity.User; // Added import
 import social_media.social_media_handler.service.linkedin.LinkedInAuthService;
+import jakarta.servlet.http.HttpServletResponse; // Added import
+import java.io.IOException; // Added import
 
 @RestController
 @RequestMapping("/oauth/linkedin")
@@ -17,8 +21,10 @@ public class LinkedInOAuthController {
      * STEP 1: Redirect user to LinkedIn authorization page
      */
     @GetMapping("/connect")
-    public ResponseEntity<String> connect() {
-        String authUrl = linkedInAuthService.getAuthorizationUrl();
+    public ResponseEntity<String> connect(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        String userId = user.getId();
+        String authUrl = linkedInAuthService.getAuthorizationUrl(userId);
         return ResponseEntity.ok(authUrl);
     }
 
@@ -28,9 +34,15 @@ public class LinkedInOAuthController {
      */
 
     @GetMapping("/callback")
-    public ResponseEntity<String> callback(@RequestParam("code") String code, @RequestParam("state") String userId) {
+    public void callback(@RequestParam("code") String code, @RequestParam("state") String userId, HttpServletResponse response) throws IOException {
         linkedInAuthService.handleCallback(code, userId);
-        return ResponseEntity.ok("LinkedIn connected successfully");
+        String htmlContent = "<!DOCTYPE html><html><head><title>LinkedIn Auth Success</title></head><body>" +
+                             "<script type='text/javascript'>" +
+                             "window.opener.postMessage('linkedin-auth-success', 'http://localhost:8081');" +
+                             "window.close();" +
+                             "</script></body></html>";
+        response.setContentType("text/html");
+        response.getWriter().write(htmlContent);
     }
 }
 

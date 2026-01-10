@@ -66,7 +66,7 @@ public class AuthService implements UserDetailsService {
         User savedUser = userRepository.save(user);
 
         // 3. Generate JWT immediately (Auto-Login)
-        String token = jwtUtils.generateToken(savedUser.getEmail());
+        String token = jwtUtils.generateToken(savedUser.getEmail(), savedUser.getId());
 
         // ✅ EMAIL ON SIGNUP
         emailService.sendEmail(
@@ -102,7 +102,7 @@ public class AuthService implements UserDetailsService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         //Generate JWT
-        String jwt = jwtUtils.generateToken(request.getEmail());
+        String jwt = jwtUtils.generateToken(user.getEmail(), user.getId());
 
         // ✅ EMAIL ON LOGIN
         emailService.sendEmail(
@@ -114,16 +114,10 @@ public class AuthService implements UserDetailsService {
         return new LoginResponse(jwt, user.getEmail(), "Login Successfully");
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email)
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .roles("USER") // or get from user if you have roles
-                .build();
     }
 
 

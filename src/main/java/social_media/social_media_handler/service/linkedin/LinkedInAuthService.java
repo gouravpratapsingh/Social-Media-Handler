@@ -38,10 +38,11 @@ public class LinkedInAuthService {
     /**
      * Step 1: Generate LinkedIn Authorization URL
      */
-    public String getAuthorizationUrl() {
+    public String getAuthorizationUrl(String userId) {
 
         return "https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=" + clientId
-                + "&redirect_uri=" + redirectUri + "&scope=openid%20profile%20email%20w_member_social";
+                + "&redirect_uri=" + redirectUri + "&scope=openid%20profile%20email%20w_member_social"
+                + "&state=" + userId;
     }
 
     /**
