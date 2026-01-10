@@ -24,7 +24,7 @@ public class YouTubeOAuthController{
     ) throws Exception {
         String email = authentication.getName(); // SAFE
         authService.handleCallback(code, email);
-        response.sendRedirect("http://localhost:8082/main.html");
+        response.sendRedirect("http://localhost:8081/frontend/oauth-success.html");
     }
 
 }

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Authentication Success</title>
+    <script>
+        // Send a message to the parent window
+        window.opener.postMessage("youtube-auth-success", "http://localhost:8081");
+        // Close the popup
+        window.close();
+    </script>
+</head>
+<body>
+    <p>Authentication successful! You can now close this window.</p>
+</body>
+</html>

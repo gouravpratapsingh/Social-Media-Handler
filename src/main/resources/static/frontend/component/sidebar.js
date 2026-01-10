@@ -30,7 +30,7 @@ function initSidebarLogic() {
   if (showMoreBtn) {
     showMoreBtn.addEventListener("click", () => {
       showMore = !showMore;
-      const hiddenItems = document.querySelectorAll(".channel-item[data-channel='facebook'], .channel-item[data-channel='youtube'], .channel-item[data-channel='tiktok'], .channel-item[data-channel='twitter'], .channel-item[data-channel='snapchat'], .channel-item[data-channel='pinterest'], .channel-item[data-channel='whatsapp']");
+      const hiddenItems = document.querySelectorAll(".channel-item[data-channel='facebook'], .channel-item[data-channel='youtube'], .channel-item[data-channel='twitter'], .channel-item[data-channel='instagram'], .channel-item[data-channel='snapchat'], .channel-item[data-channel='pinterest'], .channel-item[data-channel='whatsapp']");
       
       hiddenItems.forEach(item => {
         if (showMore) {
@@ -56,21 +56,33 @@ function initSidebarLogic() {
   }
 }
 
-async function connectChannel(channel) {
-  console.log("Connecting:", channel);
-
+function connectChannel(channel) {
   if (channel === "youtube") {
-    // Correct the path to match YouTubeOAuthController.java
-    window.location.href = "/oauth/youtube/connect"; 
-    return;
-  }
+    const popup = window.open(
+      "http://localhost:8081/oauth/youtube/connect",
+      "youtube-oauth",
+      "width=600,height=700"
+    );
 
-  // Fallback for other channels
-  await fetch("/api/channels/connect", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ channel })
-  });
+    // Listen for messages from the popup
+    window.addEventListener('message', (event) => {
+      // It's a good practice to check the origin of the message for security
+      if (event.origin !== "http://localhost:8081") {
+        return;
+      }
+
+      if (event.data === 'youtube-auth-success') {
+        // The popup has sent a success message.
+        console.log('YouTube authentication successful!');
+        if (popup) {
+          popup.close();
+        }
+        // Reload the page to reflect the new state.
+        window.location.reload();
+      }
+    }, { once: true }); // Use { once: true } to automatically remove the listener after it's called
+  }
+  // You can add other channels (facebook, twitter, etc.) here later
 }
 loadSidebar();
 

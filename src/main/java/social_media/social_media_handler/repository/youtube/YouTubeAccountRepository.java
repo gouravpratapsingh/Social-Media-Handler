@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface YouTubeAccountRepository
         extends JpaRepository<YouTubeAccount, Long> {
 
-    Optional<YouTubeAccount> findByUser_Id(String userId);
+    Optional<YouTubeAccount> findByChannelId(String channelId);
 }
