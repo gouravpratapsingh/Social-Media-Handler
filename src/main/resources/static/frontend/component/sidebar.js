@@ -83,6 +83,63 @@ function connectChannel(channel) {
       }
     }, { once: true }); // Use { once: true } to automatically remove the listener after it's called
   }
+  if (channel === "linkedin") {
+    const jwtToken = localStorage.getItem("authToken"); // Get the JWT token from localStorage
+
+    if (!jwtToken) {
+      console.error("JWT token not found. User must be logged in.");
+      alert("Please log in to connect your LinkedIn account.");
+      return;
+    }
+
+    fetch("http://localhost:8081/oauth/linkedin/connect", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${jwtToken}`
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        if (response.status === 401) {
+          alert("Unauthorized: Please log in again.");
+          localStorage.removeItem('authToken');
+          window.location.href = 'login.html';
+        }
+        throw new Error("Failed to get LinkedIn authorization URL, status: " + response.status);
+      }
+      return response.text();
+    })
+    .then(authUrl => {
+      const popup = window.open(
+        authUrl,
+        "linkedin-oauth",
+        "width=600,height=700"
+      );
+
+      // Listen for messages from the popup
+      window.addEventListener('message', (event) => {
+        // It's a good practice to check the origin of the message for security
+        // The callback from LinkedIn will redirect to our /oauth/linkedin/callback endpoint,
+        // which then returns the HTML with the postMessage. So the origin will be our server.
+        if (event.origin !== "http://localhost:8081") {
+          return;
+        }
+
+        if (event.data === 'linkedin-auth-success') {
+          console.log('LinkedIn authentication successful!');
+          if (popup) {
+            popup.close();
+          }
+          // Reload the page to reflect the new state, e.g., show LinkedIn as connected
+          window.location.reload();
+        }
+      }, { once: true }); // Use { once: true } to automatically remove the listener after it's called
+    })
+    .catch(error => {
+      console.error("Error connecting to LinkedIn:", error);
+      alert("Failed to connect to LinkedIn. Please try again.");
+    });
+  }
   // You can add other channels (facebook, twitter, etc.) here later
 }
 loadSidebar();
