@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import social_media.social_media_handler.entity.youtube.PostStatus;
+import social_media.social_media_handler.entity.PostStatus;
 import social_media.social_media_handler.entity.youtube.YouTubeScheduledPost;
 import social_media.social_media_handler.entity.youtube.YouTubeAccount;
 import social_media.social_media_handler.repository.youtube.YouTubeScheduledPostRepository;

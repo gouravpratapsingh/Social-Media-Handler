@@ -2,7 +2,7 @@ package social_media.social_media_handler.entity.linkedin;
 
 import jakarta.persistence.*;
 import lombok.*;
-import social_media.social_media_handler.entity.youtube.PostStatus;
+import social_media.social_media_handler.entity.PostStatus;
 
 import java.time.LocalDateTime;
 

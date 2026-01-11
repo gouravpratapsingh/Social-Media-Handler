@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import social_media.social_media_handler.entity.linkedin.LinkedInAccount;
 import social_media.social_media_handler.entity.linkedin.LinkedInScheduledPost;
-import social_media.social_media_handler.entity.youtube.PostStatus;
+import social_media.social_media_handler.entity.PostStatus;
 import social_media.social_media_handler.repository.linkedin.LinkedInScheduledPostRepository;
 import social_media.social_media_handler.service.email.EmailService;
 import social_media.social_media_handler.service.linkedin.LinkedInMediaService;

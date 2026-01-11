@@ -1,4 +1,4 @@
-package social_media.social_media_handler.entity.youtube;
+package social_media.social_media_handler.entity;
 
 public enum PostStatus {
     PENDING,

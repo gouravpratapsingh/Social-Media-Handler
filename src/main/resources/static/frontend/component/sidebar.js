@@ -57,9 +57,10 @@ function initSidebarLogic() {
 }
 
 function connectChannel(channel) {
+ loggedInUserEmail=localStorage.getItem('userEmail')
   if (channel === "youtube") {
     const popup = window.open(
-      "http://localhost:8081/oauth/youtube/connect",
+      "http://localhost:8081/oauth/youtube/connect?email=" + loggedInUserEmail,
       "youtube-oauth",
       "width=600,height=700"
     );

@@ -1,5 +1,6 @@
 package social_media.social_media_handler.entity.youtube;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import social_media.social_media_handler.entity.User;
@@ -35,5 +36,6 @@ public class YouTubeAccount {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
     private User user;
 }

@@ -33,7 +33,6 @@ public class PinterestController {
         post.setDestinationLink(dto.getDestinationLink());
         post.setScheduledTime(dto.getScheduledTime());
         post.setStatus("PENDING");
-
         repository.save(post);
         return "Pin scheduled successfully for " + dto.getScheduledTime();
     }

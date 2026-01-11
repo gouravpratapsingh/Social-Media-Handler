@@ -1,5 +1,6 @@
 package social_media.social_media_handler.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import social_media.social_media_handler.entity.youtube.YouTubeAccount;
@@ -40,6 +41,7 @@ public class User {
      */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
+    @JsonManagedReference
     private List<YouTubeAccount> youtubeAccounts = new ArrayList<>();
 
     /* ================= Helper methods ================= */

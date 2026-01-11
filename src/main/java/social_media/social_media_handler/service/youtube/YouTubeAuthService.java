@@ -31,19 +31,20 @@ public class YouTubeAuthService {
     /**
      * Step 1: Generate Google OAuth URL
      */
-    public String getAuthorizationUrl() {
-
+    public String getAuthorizationUrl(String email) {
         return "https://accounts.google.com/o/oauth2/v2/auth"
                 + "?client_id=" + config.getClientId()
                 + "&redirect_uri=" + config.getRedirectUri()
                 + "&response_type=code"
                 + "&access_type=offline"
                 + "&prompt=consent"
+                + "&state=" + email   // 🔥 PASS USER ID HERE
                 + "&scope="
                 + "https://www.googleapis.com/auth/youtube.upload "
                 + "https://www.googleapis.com/auth/youtube.readonly "
                 + "https://www.googleapis.com/auth/yt-analytics.readonly";
     }
+
 
     /**
      * Step 2: Handle OAuth callback
@@ -51,8 +52,7 @@ public class YouTubeAuthService {
     public void handleCallback(String code, String email) throws Exception {
 
         // Fetch logged-in user
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
 
         // Exchange code for access token
         GoogleTokenResponse tokenResponse = new GoogleAuthorizationCodeTokenRequest(
@@ -66,9 +66,12 @@ public class YouTubeAuthService {
                 ).execute();
 
         // Use token to get channel info from YouTube API
-        Credential credential = new GoogleCredential().setAccessToken(tokenResponse.getAccessToken()); // This line is not used
-        YouTube youtube = new YouTube.Builder(GoogleNetHttpTransport.newTrustedTransport(), GsonFactory.getDefaultInstance(), credential)
- .setApplicationName("social-media-handler").build();
+        Credential credential = new GoogleCredential().setAccessToken(tokenResponse.getAccessToken());
+        YouTube youtube = new YouTube.Builder(
+                GoogleNetHttpTransport.newTrustedTransport(),
+                GsonFactory.getDefaultInstance(),
+                credential
+        ).setApplicationName("social-media-handler").build();
 
         YouTube.Channels.List request = youtube.channels().list("snippet");
         ChannelListResponse response = request.setMine(true).execute();
@@ -82,13 +85,13 @@ public class YouTubeAuthService {
         String channelName = channel.getSnippet().getTitle();
 
         // Fetch or create YouTube account based on channelId
-        YouTubeAccount account = youtubeAccountRepository.findByChannelId(channelId)
+        YouTubeAccount account = youtubeAccountRepository.findByChannelIdAndUser_Id(channelId, user.getId())
                 .orElse(new YouTubeAccount());
-
         account.setUser(user);
         account.setChannelId(channelId);
         account.setChannelName(channelName);
         account.setAccessToken(tokenResponse.getAccessToken());
+
         // Only set refresh token if it's provided in the response
         if (tokenResponse.getRefreshToken() != null) {
             account.setRefreshToken(tokenResponse.getRefreshToken());
@@ -96,7 +99,11 @@ public class YouTubeAuthService {
         account.setTokenExpiry(
                 LocalDateTime.now().plusSeconds(tokenResponse.getExpiresInSeconds())
         );
-
         youtubeAccountRepository.save(account);
+    }
+
+    public List<YouTubeAccount> getAllChannels(String email){
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("user not found"));
+        return youtubeAccountRepository.findAllByUser_Id(user.getId());
     }
 }
