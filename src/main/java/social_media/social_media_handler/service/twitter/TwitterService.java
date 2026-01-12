@@ -1,4 +1,4 @@
-package social_media.social_media_handler.service;
+package social_media.social_media_handler.service.twitter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

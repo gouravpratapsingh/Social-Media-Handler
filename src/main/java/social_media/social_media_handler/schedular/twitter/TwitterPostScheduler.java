@@ -2,7 +2,8 @@ package social_media.social_media_handler.schedular.twitter;
 
 import social_media.social_media_handler.entity.twitter.TwitterPost;
 import social_media.social_media_handler.repository.twitter.TwitterPostRepository;
-import social_media.social_media_handler.service.TwitterService;
+import social_media.social_media_handler.service.twitter.TwitterService;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
