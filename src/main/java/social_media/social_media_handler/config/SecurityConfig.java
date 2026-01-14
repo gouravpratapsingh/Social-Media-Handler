@@ -32,10 +32,10 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable) // Disable CSRF for local development/testing
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
                 .authorizeHttpRequests(auth -> auth
-
+                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         // 🔥 MUST be first
-                        .requestMatchers("/", "/index.html", "/favicon.ico",
-                                "/frontend/**", "/static/**", "/**/*.html", "/**/*.js", "/**/*.css").permitAll()
+                        // .requestMatchers("/", "/index.html", "/favicon.ico",
+                        //         "/frontend/**", "/static/**", "/**/*.html", "/**/*.js", "/**/*.css").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/whatsapp/**").permitAll()
                         .requestMatchers("/api/posts/**").permitAll()

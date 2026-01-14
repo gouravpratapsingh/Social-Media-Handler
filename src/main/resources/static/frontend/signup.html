@@ -147,6 +147,11 @@
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        if (window.location.protocol === 'file:') {
+            alert('Please run the Spring Boot backend and access the signup page through http://localhost:8082/signup.html to sign up.');
+            return;
+        }
+
         const signupData = {
             username: usernameInput.value.trim(),
             email: emailInput.value.trim(),
@@ -159,7 +164,7 @@
         submitBtn.disabled = true;
         loadingText.innerText = "Creating your workspace...";
 
-        const response = await fetch('http://localhost:8081/auth/signup', {
+        const response = await fetch('http://localhost:8082/auth/signup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(signupData)

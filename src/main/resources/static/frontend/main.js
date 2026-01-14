@@ -27,7 +27,7 @@ function logout() {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
-    window.location.href = 'login.html';
+    window.location.href = 'home.html';
   }
 }
 
@@ -48,6 +48,20 @@ window.addEventListener('load', () => {
     userEmailElement.textContent = userEmail;
   }
 
+  // Set active nav link
+  const page = window.location.pathname.split('/').pop();
+  const navLinks = document.querySelectorAll('#navLinks a');
+  navLinks.forEach(link => {
+    const href = link.getAttribute('href');
+    if (href === page) {
+      link.classList.add('text-blue-600', 'bg-blue-50', 'font-semibold');
+      link.classList.remove('text-gray-500', 'font-medium');
+    } else {
+      link.classList.remove('text-blue-600', 'bg-blue-50', 'font-semibold');
+      link.classList.add('text-gray-500', 'font-medium');
+    }
+  });
+
   // Initialize profile dropdown
   initializeProfileDropdown();
 });
@@ -57,22 +71,65 @@ function initializeProfileDropdown() {
   const profileBtn = document.getElementById('profileBtn');
   const profileMenu = document.getElementById('profileMenu');
 
-  if (!profileBtn || !profileMenu) return;
+  if (!profileBtn || !profileMenu) {
+    console.warn('Profile dropdown elements not found');
+    return;
+  }
 
-  profileBtn.addEventListener('click', (e) => {
+  let isOpen = false;
+
+  // Toggle dropdown on button click
+  const toggleDropdown = (e) => {
     e.stopPropagation();
-    profileMenu.classList.toggle('hidden');
-  });
+    isOpen = !isOpen;
+    profileMenu.classList.toggle('hidden', !isOpen);
+    profileBtn.setAttribute('aria-expanded', isOpen);
+  };
 
-  document.addEventListener('click', (e) => {
-    if (!profileBtn.contains(e.target) && !profileMenu.contains(e.target)) {
-      profileMenu.classList.add('hidden');
+  // Close dropdown
+  const closeDropdown = () => {
+    isOpen = false;
+    profileMenu.classList.add('hidden');
+    profileBtn.setAttribute('aria-expanded', 'false');
+  };
+
+  // Button click handler
+  profileBtn.addEventListener('click', toggleDropdown);
+
+  // Keyboard navigation
+  profileBtn.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleDropdown(e);
+    } else if (e.key === 'Escape' && isOpen) {
+      closeDropdown();
     }
   });
 
+  // Close on outside click
+  document.addEventListener('click', (e) => {
+    if (!profileBtn.contains(e.target) && !profileMenu.contains(e.target)) {
+      closeDropdown();
+    }
+  });
+
+  // Prevent menu clicks from closing
   profileMenu.addEventListener('click', (e) => {
     e.stopPropagation();
   });
+
+  // Focus management
+  profileMenu.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeDropdown();
+      profileBtn.focus();
+    }
+  });
+
+  // Initialize ARIA attributes
+  profileBtn.setAttribute('aria-haspopup', 'true');
+  profileBtn.setAttribute('aria-expanded', 'false');
+  profileMenu.setAttribute('role', 'menu');
 }
 
 // VIEW TOGGLE (for list/calendar views)

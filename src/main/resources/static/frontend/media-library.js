@@ -59,7 +59,7 @@ function renderMedia(filter) {
 }
 
 
-function filterMedia(type) {
+function filterMedia(type, event) {
   document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
   event.target.classList.add("active");
   renderMedia(type);
@@ -115,22 +115,32 @@ function initializeProfileDropdown() {
   const profileBtn = document.getElementById('profileBtn');
   const profileMenu = document.getElementById('profileMenu');
 
-  if (profileBtn && profileMenu) {
-    profileBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      profileMenu.classList.toggle('hidden');
-    });
+  console.log('Initializing profile dropdown...');
+  console.log('profileBtn found:', !!profileBtn);
+  console.log('profileMenu found:', !!profileMenu);
 
-    document.addEventListener('click', (e) => {
-      if (!profileBtn.contains(e.target) && !profileMenu.contains(e.target)) {
-        profileMenu.classList.add('hidden');
-      }
-    });
-
-    profileMenu.addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
+  if (!profileBtn || !profileMenu) {
+    console.error('Profile button or menu not found in DOM.');
+    return;
   }
+
+  profileBtn.addEventListener('click', (e) => {
+    console.log('Profile button clicked');
+    e.stopPropagation();
+    profileMenu.classList.toggle('hidden');
+    console.log('Menu visibility toggled');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!profileBtn.contains(e.target) && !profileMenu.contains(e.target)) {
+      profileMenu.classList.add('hidden');
+      console.log('Menu hidden on outside click');
+    }
+  });
+
+  profileMenu.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
 }
 
 // Initialize profile dropdown when DOM is ready
@@ -140,3 +150,4 @@ if (document.readyState === 'loading') {
   // DOM is already loaded
   initializeProfileDropdown();
 }
+
