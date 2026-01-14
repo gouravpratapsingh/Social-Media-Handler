@@ -10,8 +10,8 @@ import social_media.social_media_handler.entity.User;
 import social_media.social_media_handler.entity.linkedin.LinkedInAccount;
 import social_media.social_media_handler.repository.UserRepository;
 import social_media.social_media_handler.repository.linkedin.LinkedInAccountRepository;
-import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -38,11 +38,10 @@ public class LinkedInAuthService {
     /**
      * Step 1: Generate LinkedIn Authorization URL
      */
-    public String getAuthorizationUrl(String userId) {
+    public String getAuthorizationUrl() {
 
         return "https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=" + clientId
-                + "&redirect_uri=" + redirectUri + "&scope=openid%20profile%20email%20w_member_social"
-                + "&state=" + userId;
+                + "&redirect_uri=" + redirectUri + "&scope=openid%20profile%20email%20w_member_social";
     }
 
     /**
