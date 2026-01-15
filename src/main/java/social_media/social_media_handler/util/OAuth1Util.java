@@ -64,6 +64,13 @@ public class OAuth1Util {
     }
 
     private static String encode(String value) {
-        return URLEncoder.encode(value, StandardCharsets.UTF_8);
-    }
+        try {
+                return URLEncoder.encode(value, StandardCharsets.UTF_8.toString())
+                .replace("+", "%20")
+                .replace("*", "%2A")
+                .replace("%7E", "~");
+        } catch (Exception e) {
+                throw new RuntimeException(e);
+        }
+}
 }

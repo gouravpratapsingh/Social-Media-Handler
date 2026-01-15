@@ -26,7 +26,7 @@ public class YouTubePostScheduler {
     private final YouTubeUploadService uploadService;
     private final PostStatusNotifier postStatusNotifier; // ✅ ADD THIS
 
-    @Scheduled(cron = "0 * * * * *") // every minute
+    @Scheduled(cron = "0 * * * * ?") // every minute
     public void autoPublish() {
 
         List<YouTubeScheduledPost> posts =

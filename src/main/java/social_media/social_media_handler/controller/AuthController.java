@@ -23,12 +23,10 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest request) {
         SignupResponse response=authService.signupUser(request);
-        if (response.getEmail()==null){
+        if (!response.isSuccess()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
-        else{
-            return ResponseEntity.ok(response);
-        }
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")

@@ -19,7 +19,7 @@ public class LinkedInAnalyticsController {
     private final LinkedInScheduledPostRepository postRepository;
 
     @GetMapping("/{postId}")
-    public ResponseEntity<String> getAnalytics(@PathVariable Long postId) {
+    public ResponseEntity<String> getAnalytics(@PathVariable String postId) {
 
         LinkedInScheduledPost post =
                 postRepository.findById(postId)

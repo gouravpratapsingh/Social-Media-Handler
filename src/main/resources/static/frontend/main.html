@@ -238,16 +238,16 @@
 
 <script>
     function logout() {
-      localStorage.removeItem('authToken');
-      alert("You have been logged out.");
-      window.location.href = 'login.html';
-    }
+  localStorage.clear(); 
+  alert("You have been logged out.");
+  window.location.href = 'login.html';
+}
 
     // PROTECT THE PAGE: Redirect to login if no token exists
   window.onload = () => {
       const token = localStorage.getItem('authToken');
       if (!token) {
-          window.location.href = 'login.html';
+          window.location.href = 'home.html';
       }
 
       // Display user email in profile dropdown

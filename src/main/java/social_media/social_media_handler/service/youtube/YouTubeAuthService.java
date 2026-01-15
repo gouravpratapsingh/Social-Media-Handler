@@ -60,7 +60,7 @@ public class YouTubeAuthService {
                 ).execute();
 
         // Fetch or create YouTube account
-        YouTubeAccount account = youtubeAccountRepository.findByUser_Id(user.getId()).orElse(new YouTubeAccount());
+        YouTubeAccount account = youtubeAccountRepository.findByUserId(user.getId()).orElse(new YouTubeAccount());
 
         account.setUser(user);
         account.setAccessToken(tokenResponse.getAccessToken());
