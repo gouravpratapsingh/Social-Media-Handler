@@ -97,47 +97,68 @@ const OAUTH_ENDPOINTS = {
   whatsapp: "/oauth/whatsapp/connect"
 };
 
+
+
 async function connectChannel(channel) {
   console.log("Connecting to:", channel);
 
-  // Prevent duplicate connection attempts for the same channel
   if (ONGOING_CONNECTIONS.has(channel)) {
-    console.warn(`Connection to ${channel} is already in progress. Ignoring duplicate request.`);
-    showNotification(`Connection to ${channel} is already in progress...`, "warning");
+    console.warn(`Connection to ${channel} is already in progress.`);
     return;
   }
 
-  // Mark this channel as having an active connection attempt
   ONGOING_CONNECTIONS.add(channel);
 
   try {
-    // Check if OAuth endpoint exists for this channel
     if (OAUTH_ENDPOINTS[channel]) {
-      const oauthUrl = `${API_BASE_URL}${OAUTH_ENDPOINTS[channel]}`;
-      console.log("Redirecting to OAuth:", oauthUrl);
       
-      // Show loading state
+      let endpoint = OAUTH_ENDPOINTS[channel];
+      
+      // Handle User ID injection for Twitter & LinkedIn
+      if (channel === 'linkedin' || channel === 'twitter' || channel === 'whatsapp') {
+         const currentUserId = getUserId(); 
+         if (!currentUserId) {
+             throw new Error("User ID not found. Please log out and log in again.");
+         }
+         endpoint += `?userId=${currentUserId}`;
+      }
+
+      const backendUrl = `${API_BASE_URL}${endpoint}`;
+      console.log("Fetching Auth URL from:", backendUrl);
       showNotification(`Redirecting to ${channel} authorization...`, "info");
+
+      // ✅ FIX: ADD HEADERS HERE (This was missing!)
+      const response = await fetch(backendUrl, {
+          method: "GET",
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("authToken")}` 
+          }
+      });
       
-      // Set a timeout to handle cancelled OAuth flows
+      if (!response.ok) {
+          // If 403 happens again, it means the token is invalid or expired
+          if (response.status === 403) throw new Error("Permission denied. Try logging out and back in.");
+          throw new Error("Failed to get authorization URL from backend");
+      }
+
+      const authUrl = await response.text();
+      
+      // Redirect to Twitter
+      window.location.href = authUrl;
+      
+      // Cleanup
       const timeoutId = setTimeout(() => {
         if (ONGOING_CONNECTIONS.has(channel)) {
           ONGOING_CONNECTIONS.delete(channel);
-          console.warn(`${channel} OAuth redirect timeout - user may have cancelled`);
-          showNotification(`${channel} connection was cancelled or timed out.`, "warning");
         }
       }, REDIRECT_TIMEOUT);
-
-      // Perform redirect - if user completes OAuth, page will reload
-      // If user cancels, they'll return to this page and timeout will clean up
-      window.location.href = oauthUrl;
       
-      // Store timeout ID for potential cleanup
       sessionStorage.setItem(`${channel}_timeout`, timeoutId);
       return;
     }
 
-    // Fallback: Use generic connect API
+    // --- GENERIC FALLBACK (Your existing code) ---
     console.log("Using generic connect API for:", channel);
     showNotification(`Connecting to ${channel}...`, "info");
 
@@ -156,20 +177,44 @@ async function connectChannel(channel) {
 
     const data = await response.json();
     console.log("Connection successful:", data);
-    
-    // Show success feedback
     showNotification(`Successfully connected to ${channel}!`, "success");
-    
-    // Clear the connection tracking
     ONGOING_CONNECTIONS.delete(channel);
     
   } catch (error) {
     console.error("Connection error:", error);
-    showNotification(`Failed to connect to ${channel}. ${error.message}`, "error");
-    
-    // Clear the connection tracking on error
+    showNotification(`${error.message}`, "error");
     ONGOING_CONNECTIONS.delete(channel);
   }
+}
+
+// --- NEW HELPER FUNCTION ---
+// Paste this at the bottom of your file or outside other functions
+function getUserId() {
+    // 1. First, check if "userId" exists directly in storage
+    let userId = localStorage.getItem("userId");
+    if (userId) return userId;
+
+    // 2. If not, try to extract it from the "authToken" (JWT)
+    const token = localStorage.getItem("authToken");
+    if (!token) return null;
+
+    try {
+        // Decode the JWT Payload (Standard Method)
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        const payload = JSON.parse(jsonPayload);
+        
+        // 3. Look for common ID field names in the token
+        // 'sub' is standard, but sometimes it's 'id' or 'userId'
+        return payload.userId || payload.id || payload.sub; 
+    } catch (e) {
+        console.error("Error decoding token:", e);
+        return null;
+    }
 }
 
 // Clean up on page visibility change (e.g., when returning from OAuth)

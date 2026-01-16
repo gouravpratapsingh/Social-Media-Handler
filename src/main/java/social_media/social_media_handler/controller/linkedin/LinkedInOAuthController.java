@@ -2,8 +2,13 @@ package social_media.social_media_handler.controller.linkedin;
 
 
 import lombok.RequiredArgsConstructor;
+
+import java.io.IOException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.servlet.http.HttpServletResponse;
 import social_media.social_media_handler.service.linkedin.LinkedInAuthService;
 
 @RestController
@@ -17,8 +22,8 @@ public class LinkedInOAuthController {
      * STEP 1: Redirect user to LinkedIn authorization page
      */
     @GetMapping("/connect")
-    public ResponseEntity<String> connect() {
-        String authUrl = linkedInAuthService.getAuthorizationUrl();
+    public ResponseEntity<String> connect(@RequestParam String userId) {
+        String authUrl = linkedInAuthService.getAuthorizationUrl(userId);
         return ResponseEntity.ok(authUrl);
     }
 
@@ -27,10 +32,24 @@ public class LinkedInOAuthController {
      * NOTE: userId is passed temporarily for testing
      */
 
+    // @GetMapping("/callback")
+    // public ResponseEntity<String> callback(@RequestParam("code") String code, @RequestParam("state") String userId) {
+    //     linkedInAuthService.handleCallback(code, userId);
+    //     return ResponseEntity.ok("LinkedIn connected successfully");
+    // }
     @GetMapping("/callback")
-    public ResponseEntity<String> callback(@RequestParam("code") String code, @RequestParam("state") String userId) {
+    public void callback(
+            @RequestParam("code") String code, 
+            @RequestParam("state") String userId,
+            HttpServletResponse response // Needed for redirection
+    ) throws IOException {
+        
+        // 1. Process the auth (Exchange code for token, save to DB)
         linkedInAuthService.handleCallback(code, userId);
-        return ResponseEntity.ok("LinkedIn connected successfully");
+
+        // 2. Redirect user back to the Frontend Dashboard
+        // Adjust this URL to match your specific frontend dashboard path
+        response.sendRedirect("http://127.0.0.1:5500/src/main/resources/static/frontend/main.html?status=linkedin_connected");
     }
 }
 

@@ -33,8 +33,31 @@ public class TwitterPostScheduler {
                 );
 
         for (TwitterPost post : posts) {
-            // ✅ CORRECT CALL
-            twitterService.postTweet(post);
+            try {
+                // ✅ 1. Check if account is linked
+                if (post.getAccount() == null) {
+                    post.setStatus("FAILED");
+                    // post.setFailureReason("No Twitter account linked");
+                    repository.save(post);
+                    continue;
+                }
+
+                // ✅ 2. Get that specific user's token
+                String userAccessToken = post.getAccount().getAccessToken();
+
+                // ✅ 3. Post using that token
+                String response = twitterService.postTweet(userAccessToken, post.getContent());
+
+                post.setStatus("POSTED");
+                post.setPostedAt(LocalDateTime.now());
+                
+                // Optional: Save the Tweet ID from response if needed
+                
+            } catch (Exception e) {
+                post.setStatus("FAILED");
+                System.err.println("Tweet Failed: " + e.getMessage());
+            }
+            repository.save(post);
         }
     }
 }

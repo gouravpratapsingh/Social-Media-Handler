@@ -1,8 +1,9 @@
 package social_media.social_media_handler.dto.twitter;
 
-import org.springframework.stereotype.Service;
 
-@Service
+import lombok.Data;
+
+@Data
 public class TwitterPostRequest {
 
     private String text;

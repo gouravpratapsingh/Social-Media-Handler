@@ -15,13 +15,13 @@ public class TwitterController {
     @Autowired
     private TwitterService twitterService;
 
-    @PostMapping("/tweet")
-    public ResponseEntity<String> postTweet(
-            @RequestBody TwitterPostRequest request) {
+    // @PostMapping("/tweet")
+    // public ResponseEntity<String> postTweet(
+    //         @RequestBody TwitterPostRequest request) {
 
-        String response =
-                twitterService.postTweet(request.getText());
+    //     String response =
+    //             twitterService.postTweet(request.getText());
 
-        return ResponseEntity.ok(response);
-    }
+    //     return ResponseEntity.ok(response);
+    // }
 }
