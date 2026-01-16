@@ -36,7 +36,4 @@ build/
 node/
 node_modules/
 uploads/
-application.properties/
-
-src/main/resources/application.properties
 src/main/resources/application.properties
