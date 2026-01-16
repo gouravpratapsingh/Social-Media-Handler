@@ -4,7 +4,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 public interface TwitterPostRepository
-extends MongoRepository<TwitterPost, Long> {
+extends MongoRepository<TwitterPost, String> {
 List<TwitterPost> findByStatusAndScheduledTimeBefore(
 String status,
 LocalDateTime time

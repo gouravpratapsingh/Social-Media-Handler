@@ -4,6 +4,6 @@ import social_media.social_media_handler.entity.PostStatus;
 import social_media.social_media_handler.entity.youtube.YouTubeScheduledPost;
 import java.time.LocalDateTime;
 import java.util.List;
-public interface YouTubeScheduledPostRepository extends MongoRepository<YouTubeScheduledPost, Long> {
+public interface YouTubeScheduledPostRepository extends MongoRepository<YouTubeScheduledPost, String> {
 List<YouTubeScheduledPost> findByPlatformAndStatusAndScheduledAtLessThanEqual(String platform, PostStatus status, LocalDateTime time );
 }
