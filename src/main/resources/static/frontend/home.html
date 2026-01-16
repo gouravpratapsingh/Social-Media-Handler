@@ -239,9 +239,10 @@
 </ul>
 
 
-            <div class="flex items-center space-x-4">
-                <button class="px-6 py-2 border border-slate-300 rounded-full font-medium text-slate-700 hover:bg-gray-50"><a href="login.html">Log in</a></button>
-                <button class="px-6 py-2 bg-[#9BF0A1] rounded-full font-medium text-slate-800 hover:brightness-105"><a href="signup.html">Get started for free</a></button>
+            <div class="flex items-center space-x-4" id="authButtons">
+                <button id="loginBtn" class="px-6 py-2 border border-slate-300 rounded-full font-medium text-slate-700 hover:bg-gray-50"><a href="login.html">Log in</a></button>
+                <button id="signupBtn" class="px-6 py-2 bg-[#9BF0A1] rounded-full font-medium text-slate-800 hover:brightness-105"><a href="signup.html">Get started for free</a></button>
+                <button id="logoutBtn" class="hidden px-6 py-2 border border-slate-300 rounded-full font-medium text-slate-700 hover:bg-gray-50" onclick="logout()">Log out</button>
             </div>
         </div>
     </nav>
@@ -781,7 +782,37 @@
       // window.location.href = "/";
     });
 
+    // Check if user is logged in and update button visibility
+    function checkLoginStatus() {
+        const token = localStorage.getItem('authToken');
+        const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        if (token) {
+            // User is logged in - hide login and signup buttons, show logout
+            if (loginBtn) loginBtn.classList.add('hidden');
+            if (signupBtn) signupBtn.classList.add('hidden');
+            if (logoutBtn) logoutBtn.classList.remove('hidden');
+        } else {
+            // User is not logged in - show login and signup buttons, hide logout
+            if (loginBtn) loginBtn.classList.remove('hidden');
+            if (signupBtn) signupBtn.classList.remove('hidden');
+            if (logoutBtn) logoutBtn.classList.add('hidden');
+        }
+    }
+
+    // Logout function
+    function logout() {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        // Refresh page to update UI
+        window.location.href = 'home.html';
+    }
+
+    // Run on page load
     window.onload = () => {
+            checkLoginStatus();
             if (localStorage.getItem('authToken')) {
                 window.location.href = 'main.html';
             }
