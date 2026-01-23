@@ -157,17 +157,17 @@
   </header>
 
   <!-- ===== CONTENT CARD ===== -->
-  <section class="relative z-10 bg-white/70 backdrop-blur-md rounded-2xl border border-cyan-200/30 p-8">
+  <section class="relative z-10 bg-white/70 backdrop-blur-md rounded-2xl border border-cyan-200/30 p-8 flex flex-col max-h-[calc(100vh-200px)] overflow-hidden">
 
   <!-- ===== LIST VIEW (CARDS WILL RENDER HERE) ===== -->
-  <section id="listViewContent">
+  <section id="listViewContent" class="overflow-y-auto flex-1">
     <p class="text-gray-500 italic text-center py-16">
       Your scheduled posts list will appear here.
     </p>
   </section>
 
     <!-- ===== CALENDAR VIEW ===== -->
-    <section id="calendarViewContent" class="hidden">
+    <section id="calendarViewContent" class="hidden overflow-y-auto flex-1">
 
       <div class="flex items-center justify-between mb-8">
 
@@ -247,6 +247,15 @@
               <div id="detailPlatformIcon" class="w-12 h-12 rounded-lg flex items-center justify-center text-2xl"></div>
             </div>
 
+            <!-- Media Preview in Modal -->
+            <div id="detailMediaContainer" class="hidden">
+              <h4 class="text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 mb-3">🖼️ Uploaded Media Preview</h4>
+              <div class="rounded-xl overflow-hidden h-64 bg-gradient-to-br from-slate-200 to-slate-300 border-2 border-slate-300 shadow-lg">
+                <img id="detailMediaImage" src="" alt="media" class="w-full h-full object-cover hidden">
+                <video id="detailMediaVideo" controls class="w-full h-full object-cover hidden"></video>
+              </div>
+            </div>
+
             <!-- Full Message Content -->
             <div>
               <h4 class="text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 mb-2">📝 Message Content</h4>
@@ -303,42 +312,49 @@
 </div>
 
 <div id="postModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200 border border-slate-200">
-        <div class="p-6 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-cyan-50/30">
+    <div class="bg-white rounded-3xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in duration-200 border border-slate-200 max-h-[90vh] flex flex-col">
+        <div class="p-4 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-cyan-50/30">
             <div class="flex justify-between items-center">
               <div>
-                <h3 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600">Schedule New Post</h3>
-                <p class="text-xs text-slate-500 mt-1">Plan your social media content</p>
+                <h3 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600">Schedule New Post</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Plan your social media content</p>
               </div>
-              <button onclick="closeModal()" class="w-8 h-8 rounded-lg hover:bg-slate-200 transition flex items-center justify-center text-slate-400 hover:text-slate-600">
+              <button onclick="closeModal()" class="w-8 h-8 rounded-lg hover:bg-slate-200 transition flex items-center justify-center text-slate-400 hover:text-slate-600 flex-shrink-0">
                 <span class="text-xl font-bold">&times;</span>
               </button>
             </div>
         </div>
-        <form id="scheduleForm" class="p-6 space-y-5">
+        <form id="scheduleForm" class="p-4 space-y-3 overflow-y-auto flex-1">
             <div>
-                <label class="block text-sm font-semibold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 mb-2">📱 Platform</label>
-                <select id="platform" class="w-full border border-slate-300 rounded-xl p-3 bg-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition font-medium text-slate-700">
+                <label class="block text-xs font-semibold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 mb-1">📱 Platform</label>
+                <select id="platform" class="w-full border border-slate-300 rounded-lg p-2 bg-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition font-medium text-slate-700 text-sm">
                     <option value="WHATSAPP">WhatsApp</option>
-                    <option value="INSTAGRAM">Instagram</option>
-                    <option value="FACEBOOK">Facebook</option>
+                    <option value="LINKEDIN">LinkedIn</option>
+                    <option value="TWITTER">Twitter</option>
+                    <option value="YOUTUBE">YouTube</option>
+                    <option value="PINTEREST">Pinterest</option>
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-semibold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 mb-2">📞 Recipient Number</label>
-                <input type="text" id="recipient" placeholder="e.g. 919876543210" class="w-full border border-slate-300 rounded-xl p-3 bg-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition font-medium text-slate-700 placeholder-slate-400">
+                <label class="block text-xs font-semibold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 mb-1">📞 Recipient Number</label>
+                <input type="text" id="recipient" placeholder="e.g. 919876543210" class="w-full border border-slate-300 rounded-lg p-2 bg-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition font-medium text-slate-700 placeholder-slate-400 text-sm">
             </div>
             <div>
-                <label class="block text-sm font-semibold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 mb-2">💬 Message Content</label>
-                <textarea id="content" rows="4" class="w-full border border-slate-300 rounded-xl p-3 bg-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition font-medium text-slate-700 placeholder-slate-400 resize-none" placeholder="Type your message here..." required></textarea>
+                <label class="block text-xs font-semibold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 mb-1">💬 Message Content</label>
+                <textarea id="content" rows="2" class="w-full border border-slate-300 rounded-lg p-2 bg-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition font-medium text-slate-700 placeholder-slate-400 resize-none text-sm" placeholder="Type your message here..." required></textarea>
             </div>
             <div>
-                <label class="block text-sm font-semibold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 mb-2">⏰ Schedule Time</label>
-                <input type="datetime-local" id="scheduledTime" class="w-full border border-slate-300 rounded-xl p-3 bg-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition font-medium text-slate-700" required>
+                <label class="block text-xs font-semibold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 mb-1">🖼️ Media (Optional)</label>
+                <input type="file" id="mediaFile" accept="image/*,video/*" class="w-full border border-slate-300 rounded-lg p-2 bg-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition font-medium text-slate-700 cursor-pointer file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-cyan-100 file:text-cyan-700 hover:file:bg-cyan-200 text-sm">
+                <p class="text-xs text-slate-500 mt-1">Images or Videos</p>
             </div>
-            <div class="flex gap-3 pt-4">
-                <button type="button" onclick="closeModal()" class="flex-1 px-4 py-3 border border-slate-300 rounded-xl font-semibold text-slate-600 hover:bg-slate-50 transition-colors">Cancel</button>
-                <button type="submit" class="flex-1 px-4 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-xl font-semibold hover:shadow-lg transition-all active:scale-95">Schedule Now</button>
+            <div>
+                <label class="block text-xs font-semibold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 mb-1">⏰ Schedule Time</label>
+                <input type="datetime-local" id="scheduledTime" class="w-full border border-slate-300 rounded-lg p-2 bg-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition font-medium text-slate-700 text-sm" required>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button type="button" onclick="closeModal()" class="flex-1 px-3 py-2 border border-slate-300 rounded-lg font-semibold text-slate-600 hover:bg-slate-50 transition-colors text-sm">Cancel</button>
+                <button type="submit" class="flex-1 px-3 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all active:scale-95 text-sm">Schedule Now</button>
             </div>
         </form>
     </div>
@@ -398,12 +414,55 @@ document.querySelectorAll('button').forEach(btn => {
 document.getElementById('scheduleForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
+    const mediaFile = document.getElementById('mediaFile').files[0];
+    
+    // ===== BACKEND MEDIA UPLOAD CONNECTION POINT =====
+    // TODO: Implement media upload to backend
+    // 1. Create FormData object with file
+    // 2. Send POST request to: http://localhost:8082/api/media/upload
+    // 3. Get media ID/URL from response
+    // 4. Include mediaId/mediaUrl in postData below
+    
+    let mediaId = null;
+    if (mediaFile) {
+        try {
+            const formData = new FormData();
+            formData.append('file', mediaFile);
+            
+            // ===== UPLOAD MEDIA TO BACKEND =====
+            const mediaResponse = await fetch('http://localhost:8082/api/media/upload', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('authToken')
+                    // Note: Do NOT set Content-Type, browser will set it with correct boundary
+                },
+                body: formData
+            });
+            
+            if (mediaResponse.ok) {
+                const mediaData = await mediaResponse.json();
+                mediaId = mediaData.mediaId || mediaData.id || mediaData.url; // Get media ID
+                // Also store mediaUrl if backend returns it
+                window.uploadedMediaUrl = mediaData.url || mediaData.mediaUrl || mediaData.path || null;
+                console.log("Media uploaded successfully:", mediaId);
+                console.log("Media URL:", window.uploadedMediaUrl);
+            } else {
+                console.warn("Media upload failed, proceeding without media");
+            }
+        } catch (error) {
+            console.error("Error uploading media:", error);
+            console.warn("Proceeding with post without media");
+        }
+    }
+    
     const postData = {
         platform: document.getElementById('platform').value,
         recipient: document.getElementById('recipient').value,
         content: document.getElementById('content').value,
         scheduledTime: document.getElementById('scheduledTime').value,
-        status: "PENDING"
+        status: "PENDING",
+        mediaId: mediaId, // Include uploaded media ID if available
+        mediaUrl: window.uploadedMediaUrl || null // Include media URL if available
     };
 
     try {
@@ -419,10 +478,13 @@ document.getElementById('scheduleForm').addEventListener('submit', async (e) => 
         if (response.ok) {
             alert("✅ Post scheduled successfully!");
             closeModal();
+            // Clear the temporary media URL
+            window.uploadedMediaUrl = null;
             loadPosts(); // UI refresh karne ke liye
         } else {
             const errorData = await response.json();
-            alert("❌ Error: " + (errorData.message || "Failed to schedule post"));        }
+            alert("❌ Error: " + (errorData.message || "Failed to schedule post"));
+        }
     } catch (error) {
         console.error("Error sending data:", error);
         alert("Server se connection fail ho gaya.");
@@ -458,42 +520,62 @@ posts.forEach(post => {
 
   const platformIcon =
     post.platform === "WHATSAPP" ? "💬" :
-    post.platform === "INSTAGRAM" ? "📷" :
-    post.platform === "FACEBOOK" ? "📘" : "📢";
+    post.platform === "LINKEDIN" ? "in" :
+    post.platform === "TWITTER" ? "𝕏" :
+    post.platform === "YOUTUBE" ? "▶" :
+    post.platform === "PINTEREST" ? "P" : "📢";
 
   const accentColor =
-    post.platform === "WHATSAPP" ? "cyan" :
-    post.platform === "INSTAGRAM" ? "blue" :
-    post.platform === "FACEBOOK" ? "cyan" : "blue";
+    post.platform === "WHATSAPP" ? "green" :
+    post.platform === "LINKEDIN" ? "blue" :
+    post.platform === "TWITTER" ? "slate" :
+    post.platform === "YOUTUBE" ? "red" :
+    post.platform === "PINTEREST" ? "rose" : "cyan";
 
   const gradientBg =
-    post.platform === "WHATSAPP" ? "radial-gradient(circle at 100% 100%, rgba(6,182,212,0.12) 0%, rgba(59,130,246,0.05) 40%, rgba(255,255,255,0) 70%)" :
-    post.platform === "INSTAGRAM" ? "radial-gradient(circle at 100% 100%, rgba(59,130,246,0.12) 0%, rgba(99,102,241,0.05) 40%, rgba(255,255,255,0) 70%)" :
+    post.platform === "WHATSAPP" ? "radial-gradient(circle at 100% 100%, rgba(52,211,153,0.15) 0%, rgba(16,185,129,0.05) 40%, rgba(255,255,255,0) 70%)" :
+    post.platform === "LINKEDIN" ? "radial-gradient(circle at 100% 100%, rgba(59,130,246,0.15) 0%, rgba(99,102,241,0.05) 40%, rgba(255,255,255,0) 70%)" :
+    post.platform === "TWITTER" ? "radial-gradient(circle at 100% 100%, rgba(71,85,105,0.15) 0%, rgba(71,85,105,0.05) 40%, rgba(255,255,255,0) 70%)" :
+    post.platform === "YOUTUBE" ? "radial-gradient(circle at 100% 100%, rgba(239,68,68,0.15) 0%, rgba(234,88,12,0.05) 40%, rgba(255,255,255,0) 70%)" :
+    post.platform === "PINTEREST" ? "radial-gradient(circle at 100% 100%, rgba(220,38,38,0.15) 0%, rgba(225,29,72,0.05) 40%, rgba(255,255,255,0) 70%)" :
     "radial-gradient(circle at 100% 100%, rgba(6,182,212,0.12) 0%, rgba(59,130,246,0.05) 40%, rgba(255,255,255,0) 70%)";
 
   cardsHtml += `
-    <div class="group relative rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer border hover:border-cyan-300" style="background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7)), ${gradientBg}; backdrop-filter: blur(8px); border-color: rgba(203,213,225,0.6);">
-      <div class="h-1 w-full bg-gradient-to-r from-${accentColor}-400 to-${accentColor === 'cyan' ? 'blue' : 'cyan'}-600"></div>
+    <div class="group relative rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer border hover:border-cyan-300 flex flex-col h-full" style="background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7)), ${gradientBg}; backdrop-filter: blur(8px); border-color: rgba(203,213,225,0.6);">
+      <div class="h-1 w-full bg-gradient-to-r from-${accentColor}-400 to-${accentColor === 'cyan' ? 'blue' : accentColor === 'green' ? 'emerald' : accentColor === 'blue' ? 'indigo' : accentColor === 'slate' ? 'slate' : accentColor === 'red' ? 'orange' : 'rose'}-600"></div>
       
-      <div class="p-4 relative z-10">
+      <div class="p-4 relative z-10 flex flex-col flex-1">
         <!-- Header -->
         <div class="flex items-start justify-between mb-3">
-          <div class="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-lg group-hover:scale-110 transition-transform duration-200">
+          <div class="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-lg group-hover:scale-110 transition-transform duration-200 flex-shrink-0 font-bold text-slate-700">
             ${platformIcon}
           </div>
-          <span class="px-2 py-0.5 rounded-md text-xs font-semibold ${statusStyle}">
-            ${post.status}
-          </span>
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <span class="px-2 py-0.5 rounded-md text-xs font-semibold whitespace-nowrap ${statusStyle}">
+              ${post.status}
+            </span>
+            ${post.mediaUrl ? '<span class="px-2 py-0.5 rounded-md text-xs font-semibold bg-purple-100 text-purple-700 whitespace-nowrap">🖼️ Media</span>' : ''}
+          </div>
         </div>
+
+        <!-- Media Preview -->
+        ${post.mediaUrl ? `
+          <div class="mb-3 rounded-lg overflow-hidden h-24 bg-slate-200 flex-shrink-0">
+            ${post.mediaUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? 
+              `<img src="${post.mediaUrl}" alt="media" class="w-full h-full object-cover">` :
+              `<video src="${post.mediaUrl}" class="w-full h-full object-cover"></video>`
+            }
+          </div>
+        ` : ''}
 
         <!-- Content -->
         <h3 class="text-sm font-bold text-slate-900 mb-0.5">${post.platform}</h3>
-        <p class="text-slate-600 text-xs mb-3 leading-relaxed line-clamp-2">
+        <p class="text-slate-600 text-xs mb-3 leading-relaxed line-clamp-2 flex-grow">
           ${post.content}
         </p>
 
         <!-- Details -->
-        <div class="space-y-2 pt-2 border-t border-slate-100 text-xs">
+        <div class="space-y-2 pt-2 border-t border-slate-100 text-xs flex-shrink-0">
           <div class="flex items-center gap-2">
             <span>⏰</span>
             <span class="text-slate-600">${new Date(post.scheduledTime).toLocaleDateString()}</span>
@@ -505,7 +587,7 @@ posts.forEach(post => {
         </div>
 
         <!-- Button -->
-        <button onclick="openPostDetailsModal(${JSON.stringify(post).replace(/"/g, '&quot;')})" class="w-full mt-3 py-1.5 px-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg font-medium text-xs hover:shadow-md transition-all active:scale-95 group-hover:from-cyan-600 group-hover:to-blue-700">
+        <button onclick="openPostDetailsModal(${JSON.stringify(post).replace(/"/g, '&quot;')})" class="w-full mt-3 py-1.5 px-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg font-medium text-xs hover:shadow-md transition-all active:scale-95 group-hover:from-cyan-600 group-hover:to-blue-700 flex-shrink-0">
           View Details
         </button>
       </div>
@@ -535,8 +617,10 @@ function openPostDetailsModal(post) {
     
     const platformIcons = {
         "WHATSAPP": "💬",
-        "INSTAGRAM": "📷",
-        "FACEBOOK": "📘",
+        "LINKEDIN": "in",
+        "TWITTER": "𝕏",
+        "YOUTUBE": "▶",
+        "PINTEREST": "P",
         "DEFAULT": "📢"
     };
 
@@ -553,6 +637,32 @@ function openPostDetailsModal(post) {
     document.getElementById('detailStatusBadge').className = `px-4 py-2 rounded-lg text-sm font-bold ${statusStyles[post.status] || statusStyles["PENDING"]}`;
     
     document.getElementById('detailPlatformIcon').textContent = platformIcons[post.platform] || platformIcons["DEFAULT"];
+
+    // Display media if available - Check multiple field names
+    const detailMediaContainer = document.getElementById('detailMediaContainer');
+    const detailMediaImage = document.getElementById('detailMediaImage');
+    const detailMediaVideo = document.getElementById('detailMediaVideo');
+    
+    // Check for media in different field names (mediaUrl, media, mediaLink, etc)
+    const mediaUrl = post.mediaUrl || post.media || post.mediaLink || post.mediaPath || null;
+    
+    console.log("Post object:", post);
+    console.log("Media URL found:", mediaUrl);
+    
+    if (mediaUrl) {
+        detailMediaContainer.classList.remove('hidden');
+        if (mediaUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+            detailMediaImage.src = mediaUrl;
+            detailMediaImage.classList.remove('hidden');
+            detailMediaVideo.classList.add('hidden');
+        } else if (mediaUrl.match(/\.(mp4|webm|ogg|mov|avi)$/i)) {
+            detailMediaVideo.src = mediaUrl;
+            detailMediaVideo.classList.remove('hidden');
+            detailMediaImage.classList.add('hidden');
+        }
+    } else {
+        detailMediaContainer.classList.add('hidden');
+    }
 
     document.getElementById('detailContent').textContent = post.content;
     const scheduledDate = new Date(post.scheduledTime);
