@@ -1,167 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Custom Branding</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | Graphura</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
 </head>
-<body class="bg-white min-h-screen flex items-center justify-center p-4 md:p-0">
 
-    <div class="flex flex-col md:flex-row w-full max-w-6xl bg-white overflow-hidden">
+<body
+  class="min-h-screen flex flex-col
+         bg-[radial-gradient(circle_at_top,_#e0fbff,_#f8feff,_#ffffff)]">
 
-        <div class="w-full md:w-1/2 p-8 md:p-16 flex flex-col justify-center">
-            <div class="mb-12">
-                <div class="flex items-center mb-12">
-                    <img src="assets/graphuralogo.png" alt="Company Logo" class="h-16 w-auto">
-                </div>
+  <!-- TOP BAR -->
+  <header class="flex justify-between items-center px-10 py-6">
+    <a href="home.html" class="flex items-center gap-2 font-bold text-gray-800 hover:opacity-80 transition-opacity cursor-pointer">
+      <img src="assets/Graphura-favicon.webp" alt="Graphura Logo" class="h-8 w-auto" />
+      Graphura
+    </a>
 
-                <h1 class="text-3xl font-bold text-gray-900 mb-8">Log in</h1>
-
-                <form id="loginForm" class="space-y-6" novalidate>
-                    <div>
-                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
-                        <input type="email" id="email"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
-                            placeholder="name@company.com">
-                        <p id="emailError" class="text-red-500 text-xs mt-1 hidden font-medium">Please enter a valid email address.</p>
-                    </div>
-
-                    <div>
-                        <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-                        <input type="password" id="password"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
-                        <p id="passwordError" class="text-red-500 text-xs mt-1 hidden font-medium">Password must be at least 6 characters.</p>
-                    </div>
-
-                    <button type="submit"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-md transition duration-200">
-                        Log In
-                    </button>
-                </form>
-
-                <div class="mt-6 flex justify-between text-sm text-gray-600">
-                    <a href="signup.html" class="hover:underline">Create an account</a>
-                    <a href="#" class="hover:underline">Forgot your password?</a>
-                </div>
-            </div>
-
-            <div class="mt-auto pt-8 flex gap-4 text-xs text-gray-400 font-medium">
-                <a href="#">Terms of Service</a>
-                <span>•</span>
-                <a href="#">Privacy Policy</a>
-                <span>•</span>
-                <a href="#">Security</a>
-            </div>
-        </div>
-
-        <div class="hidden md:flex w-1/2 bg-[#FFD580] m-6 rounded-3xl p-12 flex-col relative overflow-hidden">
-            <span class="bg-white/90 text-xs font-bold px-3 py-1 rounded-md w-fit mb-4 uppercase tracking-wider">New</span>
-            <h2 class="text-4xl font-extrabold text-gray-900 leading-tight max-w-sm">
-                Your social media workspace
-            </h2>
-
-            <div class="mt-12 relative">
-                 <div class="bg-white rounded-xl shadow-2xl p-4 w-full h-64 border border-gray-100 flex flex-col gap-3">
-                    <div class="flex items-center gap-3 border-b pb-2">
-                        <div class="w-8 h-8 rounded-full bg-gray-200"></div>
-                        <div class="h-3 w-24 bg-gray-100 rounded"></div>
-                    </div>
-                    <div class="space-y-2">
-                        <div class="h-2 w-full bg-gray-50 rounded"></div>
-                        <div class="h-2 w-5/6 bg-gray-50 rounded"></div>
-                    </div>
-                    <div class="mt-auto flex justify-end">
-                        <div class="h-8 w-20 bg-blue-600 rounded"></div>
-                    </div>
-                 </div>
-            </div>
-        </div>
+    <div class="flex items-center gap-3 text-sm">
+      <span class="text-gray-500">Need an account?</span>
+      <a href="signup.html"
+        class="px-4 py-2 rounded-lg font-semibold
+               bg-gradient-to-r from-cyan-400 to-blue-500
+               text-white shadow-md
+               hover:from-cyan-500 hover:to-blue-600
+               transition">
+        Sign Up
+      </a>
     </div>
+  </header>
 
-    <script>
-        // --- NEW: AUTO-REDIRECT IF LOGGED IN ---
-        window.onload = () => {
-            if (localStorage.getItem('authToken')) {
-                window.location.href = 'main.html';
-            }
-        };
+  <!-- CENTER -->
+  <main class="flex-1 flex items-center justify-center px-4">
 
-        const form = document.getElementById('loginForm');
+    <!-- GLOSSY CARD -->
+    <div
+      class="w-full max-w-md
+             bg-white/75 backdrop-blur-xl
+             rounded-2xl
+             border border-white/60
+             shadow-[0_30px_60px_rgba(0,80,120,0.15)]
+             p-8">
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('password');
+      <h1 class="text-2xl font-bold text-center text-gray-900 mb-2">
+        Welcome back
+      </h1>
+      <p class="text-center text-gray-500 mb-6">
+        Manage all your social media in one place.
+      </p>
 
-            const isValid = validateInputs(emailInput, passwordInput);
+      <!-- ERROR -->
+      <div id="loginError"
+        class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-4">
+        <p id="loginErrorMessage" class="font-medium">
+          Invalid email or password.
+        </p>
+      </div>
 
-            if (isValid) {
-                if (window.location.protocol === 'file:') {
-                    alert('Please run the Spring Boot backend and access the login page through http://localhost:8082/login.html to log in.');
-                    return;
-                }
+      <!-- FORM -->
+      <form id="loginForm" class="space-y-5" novalidate>
 
-                const loginRequest = {
-                    email: emailInput.value,
-                    password: passwordInput.value
-                };
+        <!-- EMAIL -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">
+            Email Address
+          </label>
+          <input type="email" id="email"
+            placeholder="name@company.com"
+            class="w-full px-4 py-3 rounded-lg
+                   border border-gray-300
+                   bg-white
+                   focus:outline-none
+                   focus:ring-2 focus:ring-cyan-400/60
+                   focus:border-cyan-400
+                   transition">
+          <p id="emailError" class="hidden text-xs text-red-500 mt-1">
+            Please enter a valid email.
+          </p>
+        </div>
 
-                try {
-                    const response = await fetch('http://localhost:8082/auth/login', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(loginRequest)
-                    });
+        <!-- PASSWORD -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1">
+            Password
+          </label>
+          <input type="password" id="password"
+            class="w-full px-4 py-3 rounded-lg
+                   border border-gray-300
+                   bg-white
+                   focus:outline-none
+                   focus:ring-2 focus:ring-cyan-400/60
+                   focus:border-cyan-400
+                   transition">
+          <p id="passwordError" class="hidden text-xs text-red-500 mt-1">
+            Password must be at least 6 characters.
+          </p>
+        </div>
 
-                    const result = await response.json();
+        <!-- BUTTON -->
+        <button type="submit"
+          class="w-full py-3 rounded-lg font-bold text-white
+                 bg-gradient-to-r from-cyan-400 via-cyan-500 to-blue-500
+                 shadow-lg
+                 hover:from-cyan-500 hover:via-cyan-600 hover:to-blue-600
+                 hover:shadow-xl
+                 active:scale-[0.98]
+                 transition-all">
+          Sign In
+        </button>
+      </form>
 
-                    if (response.ok) {
-                        // --- CHANGED: Use 'authToken' to match your main.html check ---
-                        localStorage.setItem('authToken', result.token);
-                        localStorage.setItem('userEmail', emailInput.value);
-                        localStorage.setItem('userName', result.name || 'User');
-                        // Redirect to main.html
-                        window.location.href = 'main.html';
-                    } else {
-                        alert("Login Failed: " + (result.message || "Invalid credentials"));
-                    }
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert("Cannot connect to server. Ensure Backend is running at :8082 and CORS is enabled.");
-                }
-            }
+      <p class="text-xs text-gray-400 text-center mt-6">
+        By clicking continue, you agree to our
+        <a href="#" class="underline">Terms</a> &
+        <a href="#" class="underline">Privacy Policy</a>.
+      </p>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="text-center text-sm text-gray-400 py-6">
+    Support · API Status · Enterprise
+    <div class="text-xs mt-2">© 2024 Graphura Management Suite</div>
+  </footer>
+
+  <!-- ================== SCRIPTS (UNCHANGED LOGIC) ================== -->
+  <script>
+
+    const form = document.getElementById('loginForm');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('email');
+      const password = document.getElementById('password');
+
+      const isValid = validateInputs(email, password);
+      if (!isValid) return;
+
+      if (window.location.protocol === 'file:') {
+        alert('Run backend on http://localhost:8082');
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:8082/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: email.value,
+            password: password.value
+          })
         });
 
-        function validateInputs(email, pass) {
-            let valid = true;
-            const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+        const result = await response.json();
 
-            if (!email.value.match(emailPattern)) {
-                toggleError('emailError', email, true);
-                valid = false;
-            } else {
-                toggleError('emailError', email, false);
-            }
-
-            if (pass.value.length < 6) {
-                toggleError('passwordError', pass, true);
-                valid = false;
-            } else {
-                toggleError('passwordError', pass, false);
-            }
-
-            return valid;
+        if (response.ok) {
+          localStorage.setItem('authToken', result.token);
+          localStorage.setItem('userEmail', email.value);
+          localStorage.setItem('userName', result.username || 'User');
+          document.getElementById('loginError').classList.add('hidden');
+          window.location.href = 'main.html';
+        } else {
+          document.getElementById('loginErrorMessage').textContent =
+            result.message || "Invalid email or password.";
+          document.getElementById('loginError').classList.remove('hidden');
         }
+      } catch (err) {
+        alert("Backend not reachable");
+      }
+    });
 
-        function toggleError(id, input, show) {
-            document.getElementById(id).classList.toggle('hidden', !show);
-            input.classList.toggle('border-red-500', show);
-        }
-    </script>
+    function validateInputs(email, pass) {
+      let valid = true;
+      const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+      toggleError('emailError', email, !email.value.match(emailPattern));
+      toggleError('passwordError', pass, pass.value.length < 6);
+
+      if (!email.value.match(emailPattern)) valid = false;
+      if (pass.value.length < 6) valid = false;
+
+      return valid;
+    }
+
+    function toggleError(id, input, show) {
+      document.getElementById(id).classList.toggle('hidden', !show);
+      input.classList.toggle('border-red-500', show);
+    }
+  </script>
+
 </body>
 </html>

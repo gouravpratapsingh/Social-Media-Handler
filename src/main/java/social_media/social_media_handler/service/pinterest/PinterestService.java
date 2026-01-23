@@ -57,4 +57,11 @@ public class PinterestService {
                 HttpMethod.GET, entity, String.class);
         return response.getBody();
     }
+public String getPinterestAuthUrl() {
+    return "https://www.pinterest.com/oauth/?" +
+            "client_id=" + pinterestConfig.getClientId() +
+            "&redirect_uri=" + pinterestConfig.getRedirectUri() +
+            "&response_type=code" +
+            "&scope=boards:read,pins:read,pins:write";
+}
 }

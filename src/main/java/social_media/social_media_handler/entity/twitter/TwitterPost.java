@@ -27,5 +27,6 @@ public class TwitterPost {
         if (id == null) {
             id = UUID.randomUUID().toString();
         }
+        
     }
 }

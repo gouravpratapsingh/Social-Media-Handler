@@ -42,10 +42,10 @@ window.addEventListener('load', () => {
   }
   
   // Display user email in profile dropdown
-  const userEmail = localStorage.getItem('userEmail') || 'user@example.com';
+  const userEmail = localStorage.getItem('userEmail');
   const userEmailElement = document.getElementById('userEmail');
   if (userEmailElement) {
-    userEmailElement.textContent = userEmail;
+    userEmailElement.textContent = userEmail || 'No email found';
   }
 
   // Set active nav link

@@ -69,7 +69,7 @@ user.getEmail(),
 "Login Alert",
 AuthEmailTemplateUtil.loginAlert(user.getUsername())
 );
-return new LoginResponse(token, user.getEmail(), "Login successful");
+return new LoginResponse(token, user.getEmail(), user.getUsername(), "Login successful");
 }
 public void forgotPassword(String email) {
 User user = userRepository.findByEmail(email)

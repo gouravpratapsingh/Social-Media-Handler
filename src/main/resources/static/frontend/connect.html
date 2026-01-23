@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Graphura – Connect Channels</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    /* ===== SIDEBAR ===== */
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-weight: 500;
+      color: #475569;
+      transition: all 0.25s ease;
+    }
+
+    .sidebar-link:hover {
+      background: rgba(6,182,212,0.08);
+      color: #0891b2;
+    }
+
+    .sidebar-active {
+      background: rgba(6,182,212,0.15);
+      color: #0891b2;
+      box-shadow: inset 0 0 0 1px rgba(6,182,212,0.25);
+      backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-slate-50 via-white to-cyan-50/30 text-slate-800 min-h-screen">
+
+<!-- ================= APP LAYOUT ================= -->
+<div class="flex min-h-screen">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="fixed left-0 top-0 h-screen w-64 bg-gradient-to-b from-white/90 to-cyan-50/50 backdrop-blur-xl border-r border-cyan-200/30 flex flex-col justify-between">
+
+    <!-- LOGO -->
+    <div class="px-6 py-6 border-b flex items-center gap-3">
+      <img src="assets/graphuralogo.png" class="h-10" />
+    </div>
+
+    <!-- NAV -->
+    <nav class="px-4 py-6 space-y-1 flex-1">
+
+      <a href="home.html" class="sidebar-link">
+        Home
+      </a>
+      <a href="main.html" class="sidebar-link">
+        Dashboard
+      </a>
+      <a href="connect.html" class="sidebar-link sidebar-active">
+        Channels
+      </a>
+
+      <a href="library.html" class="sidebar-link">
+        Library
+      </a>
+
+    </nav>
+
+    <!-- USER PROFILE -->
+    <div class="p-4 border-t relative">
+
+      <button id="sidebarProfileBtn"
+        class="w-full flex items-center gap-3 p-3 rounded-xl bg-white shadow-sm hover:shadow transition">
+
+        <div class="w-9 h-9 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center font-bold">
+          <img src="assets/user_icon.png" class="w-5 h-5" />
+        </div>
+
+        <div class="truncate text-left">
+          <p id="sidebarUserName" class="text-sm font-semibold">User</p>
+          <p id="sidebarUserEmail" class="text-xs text-gray-500 truncate"></p>
+        </div>
+      </button>
+
+      <!-- DROPDOWN -->
+      <div id="sidebarProfileMenu"
+        class="hidden absolute bottom-20 left-4 right-4 bg-white border rounded-xl shadow-xl overflow-hidden z-50">
+
+        <button onclick="logout()"
+          class="w-full px-4 py-3 text-left text-red-600 hover:bg-red-50 font-medium">
+          Logout
+        </button>
+
+      </div>
+
+    </div>
+
+  </aside>
+
+<!-- ================= MAIN CONTENT ================= -->
+<main class="ml-64 flex-1 px-10 py-8 bg-gradient-to-br from-slate-50 via-white to-cyan-50/40 relative overflow-hidden">
+  <!-- Background gradient blobs -->
+  <div class="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-cyan-300/15 to-blue-300/10 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-indigo-300/10 to-cyan-300/10 rounded-full blur-3xl pointer-events-none"></div>
+
+  <!-- ===== PAGE HEADER ===== -->
+  <div class="relative mb-10">
+    <h1 class="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-cyan-600 to-blue-600 mb-2">
+      Connect Channels
+    </h1>
+    <p class="text-slate-600 text-lg">Connect your social media accounts to schedule and manage posts</p>
+  </div>
+
+  <!-- ===== CHANNELS GRID ===== -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative">
+
+    <!-- WhatsApp -->
+    <div class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 cursor-pointer bg-white hover:bg-gradient-to-br hover:from-emerald-50 hover:to-green-50 border border-slate-200 hover:border-emerald-100" style="background: radial-gradient(circle at 100% 100%, rgba(52,211,153,0.15) 0%, rgba(16,185,129,0.05) 40%, rgba(255,255,255,0) 70%);">
+      <div class="absolute inset-0 bg-gradient-to-br from-emerald-400/10 to-green-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      
+      <div class="p-6 relative z-10">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-2xl shadow-lg shadow-green-400/30 group-hover:scale-125 transition-transform duration-300 font-bold text-white">
+            W
+          </div>
+          <span id="whatsapp-status" class="px-3 py-1 rounded-lg text-xs font-semibold bg-emerald-100 text-emerald-700">
+            Disconnected
+          </span>
+        </div>
+
+        <h3 class="text-lg font-bold text-slate-900 mb-1">WhatsApp</h3>
+        
+        
+        <button onclick="connectChannel('WHATSAPP')" class="w-full py-2.5 px-4 bg-slate-100 text-slate-700 rounded-lg font-semibold text-sm hover:bg-gradient-to-r hover:from-emerald-500 hover:to-green-600 hover:text-white hover:shadow-lg hover:shadow-emerald-500/40 transition-all active:scale-95">
+          Connect Now
+        </button>
+      </div>
+    </div>
+
+
+
+    <!-- LinkedIn -->
+    <div class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 cursor-pointer bg-white hover:bg-gradient-to-br hover:from-blue-50 hover:to-indigo-50 border border-slate-200 hover:border-indigo-100" style="background: radial-gradient(circle at 100% 100%, rgba(59,130,246,0.15) 0%, rgba(99,102,241,0.05) 40%, rgba(255,255,255,0) 70%);">
+      <div class="absolute inset-0 bg-gradient-to-br from-indigo-400/10 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      
+      <div class="p-6 relative z-10">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-2xl shadow-lg shadow-blue-600/30 group-hover:scale-125 transition-transform duration-300 font-bold text-white">
+            in
+          </div>
+          <span id="linkedin-status" class="px-3 py-1 rounded-lg text-xs font-semibold bg-indigo-100 text-indigo-700">
+            Disconnected
+          </span>
+        </div>
+
+        <h3 class="text-lg font-bold text-slate-900 mb-1">LinkedIn</h3>
+        
+        
+        <button onclick="connectChannel('LINKEDIN')" class="w-full py-2.5 px-4 bg-slate-100 text-slate-700 rounded-lg font-semibold text-sm hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-700 hover:text-white hover:shadow-lg hover:shadow-blue-600/40 transition-all active:scale-95">
+          Connect Now
+        </button>
+      </div>
+    </div>
+
+    <!-- Twitter/X -->
+    <div class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 cursor-pointer bg-white hover:bg-gradient-to-br hover:from-slate-100 hover:to-slate-50 border border-slate-200" style="background: radial-gradient(circle at 100% 100%, rgba(71,85,105,0.15) 0%, rgba(71,85,105,0.05) 40%, rgba(255,255,255,0) 70%);">
+      <div class="absolute inset-0 bg-gradient-to-br from-slate-400/10 to-slate-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      
+      <div class="p-6 relative z-10">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-slate-800 to-slate-950 flex items-center justify-center text-2xl shadow-lg shadow-slate-800/30 group-hover:scale-125 transition-transform duration-300 font-bold text-white">
+            𝕏
+          </div>
+          <span id="twitter-status" class="px-3 py-1 rounded-lg text-xs font-semibold bg-slate-200 text-slate-700">
+            Disconnected
+          </span>
+        </div>
+
+        <h3 class="text-lg font-bold text-slate-900 mb-1">Twitter / X</h3>
+       
+        
+        <button onclick="connectChannel('TWITTER')" class="w-full py-2.5 px-4 bg-slate-100 text-slate-700 rounded-lg font-semibold text-sm hover:bg-gradient-to-r hover:from-slate-800 hover:to-slate-950 hover:text-white hover:shadow-lg hover:shadow-slate-800/40 transition-all active:scale-95">
+          Connect Now
+        </button>
+      </div>
+    </div>
+
+    <!-- YouTube -->
+    <div class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 cursor-pointer bg-white hover:bg-gradient-to-br hover:from-red-50 hover:to-orange-50 border border-slate-200 hover:border-red-100" style="background: radial-gradient(circle at 100% 100%, rgba(239,68,68,0.15) 0%, rgba(234,88,12,0.05) 40%, rgba(255,255,255,0) 70%);">
+      <div class="absolute inset-0 bg-gradient-to-br from-red-400/10 to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      
+      <div class="p-6 relative z-10">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-red-500 to-orange-600 flex items-center justify-center text-2xl shadow-lg shadow-red-400/30 group-hover:scale-125 transition-transform duration-300 font-bold text-white">
+            ▶
+          </div>
+          <span id="youtube-status" class="px-3 py-1 rounded-lg text-xs font-semibold bg-red-100 text-red-700">
+            Disconnected
+          </span>
+        </div>
+
+        <h3 class="text-lg font-bold text-slate-900 mb-1">YouTube</h3>
+        
+        
+        <button onclick="connectChannel('YOUTUBE')" class="w-full py-2.5 px-4 bg-slate-100 text-slate-700 rounded-lg font-semibold text-sm hover:bg-gradient-to-r hover:from-red-500 hover:to-orange-600 hover:text-white hover:shadow-lg hover:shadow-red-500/40 transition-all active:scale-95">
+          Connect Now
+        </button>
+      </div>
+    </div>
+
+
+    <!-- Pinterest -->
+    <div class="group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 cursor-pointer bg-white hover:bg-gradient-to-br hover:from-red-50 hover:to-rose-50 border border-slate-200 hover:border-red-100" style="background: radial-gradient(circle at 100% 100%, rgba(220,38,38,0.15) 0%, rgba(225,29,72,0.05) 40%, rgba(255,255,255,0) 70%);">
+      <div class="absolute inset-0 bg-gradient-to-br from-red-400/10 to-rose-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+      
+      <div class="p-6 relative z-10">
+        <div class="flex items-start justify-between mb-4">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-red-600 to-rose-700 flex items-center justify-center text-2xl shadow-lg shadow-red-600/30 group-hover:scale-125 transition-transform duration-300 font-bold text-white">
+            P
+          </div>
+          <span id="pinterest-status" class="px-3 py-1 rounded-lg text-xs font-semibold bg-red-100 text-red-700">
+            Disconnected
+          </span>
+        </div>
+
+        <h3 class="text-lg font-bold text-slate-900 mb-1">Pinterest</h3>
+       
+        
+        <button onclick="connectChannel('PINTEREST')" class="w-full py-2.5 px-4 bg-slate-100 text-slate-700 rounded-lg font-semibold text-sm hover:bg-gradient-to-r hover:from-red-600 hover:to-rose-700 hover:text-white hover:shadow-lg hover:shadow-red-600/40 transition-all active:scale-95">
+          Connect Now
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+</div>
+
+<script src="component/sidebar.js"></script>
+<script src="main.js"></script>
+
+<script>
+  // Sidebar profile dropdown
+  const sidebarProfileBtn = document.getElementById("sidebarProfileBtn");
+  const sidebarProfileMenu = document.getElementById("sidebarProfileMenu");
+
+  sidebarProfileBtn.addEventListener("click", e => {
+    e.stopPropagation();
+    sidebarProfileMenu.classList.toggle("hidden");
+  });
+
+  document.addEventListener("click", () => {
+    sidebarProfileMenu.classList.add("hidden");
+  });
+
+  function logout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+  }
+
+  window.onload = () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) window.location.href = "home.html";
+
+    document.getElementById("sidebarUserEmail").textContent =
+      localStorage.getItem("userEmail") || "";
+
+    document.getElementById("sidebarUserName").textContent =
+      localStorage.getItem("userName") || "User";
+
+    // Load connected channels status
+    loadChannelStatus();
+  };
+
+  // Channel connection function with OAuth support
+  async function connectChannel(channel) {
+    const token = localStorage.getItem("authToken");
+    
+    if (!token) {
+      alert("Please login first");
+      window.location.href = "login.html";
+      return;
+    }
+
+    console.log("Connecting to:", channel);
+
+    try {
+      // Platform-specific OAuth endpoints
+      const oauthEndpoints = {
+        'YOUTUBE': 'http://localhost:8082/oauth/youtube/connect',
+        'LINKEDIN': 'http://localhost:8082/oauth/linkedin/connect',
+        'TWITTER': 'http://localhost:8082/oauth/twitter/connect',
+        'PINTEREST': 'http://localhost:8082/oauth/pinterest/connect',
+        'WHATSAPP': 'http://localhost:8082/oauth/whatsapp/connect'
+      };
+
+      // Check if this platform has a direct OAuth endpoint
+      if (oauthEndpoints[channel]) {
+        window.location.href = oauthEndpoints[channel];
+        return;
+      }
+
+      // Fallback: Generic connection API endpoint
+      const response = await fetch(`http://localhost:8082/api/channels/connect/${channel.toLowerCase()}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        console.log(`${channel} connection response:`, data);
+        
+        // If OAuth URL is returned, redirect to it
+        if (data.oauthUrl) {
+          console.log(`Redirecting to OAuth URL:`, data.oauthUrl);
+          window.location.href = data.oauthUrl;
+          return;
+        }
+
+        // Update status
+        updateChannelStatus(channel, true);
+        alert(`${channel} connected successfully!`);
+        
+        // Reload channel status
+        loadChannelStatus();
+      } else {
+        const error = await response.json();
+        console.error(`Connection error for ${channel}:`, error);
+        alert(`Failed to connect ${channel}: ${error.message || 'Unknown error'}`);
+      }
+    } catch (error) {
+      console.error(`Error connecting ${channel}:`, error);
+      alert(`Error connecting ${channel}. Please check your connection and try again.`);
+    }
+  }
+
+  // Load channel connection status
+  async function loadChannelStatus() {
+    const token = localStorage.getItem("authToken");
+    
+    if (!token) {
+      console.log("No auth token found, skipping status load");
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:8082/api/channels/status', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const channels = await response.json();
+        console.log("Channel status loaded:", channels);
+        
+        // Update status for each channel
+        channels.forEach(channel => {
+          updateChannelStatus(channel.platform || channel.name, channel.isConnected || channel.connected);
+        });
+      } else {
+        console.error("Failed to load channel status:", response.status);
+      }
+    } catch (error) {
+      console.error('Error loading channel status:', error);
+    }
+  }
+
+  // Update channel status UI
+  function updateChannelStatus(channel, isConnected) {
+    const statusElement = document.getElementById(`${channel.toLowerCase()}-status`);
+    
+    if (statusElement) {
+      if (isConnected) {
+        statusElement.textContent = 'Connected';
+        statusElement.classList.remove('bg-slate-100', 'text-slate-600');
+        statusElement.classList.add('bg-green-100', 'text-green-700');
+      } else {
+        statusElement.textContent = 'Disconnected';
+        statusElement.classList.remove('bg-green-100', 'text-green-700');
+        statusElement.classList.add('bg-slate-100', 'text-slate-600');
+      }
+    }
+  }
+</script>
+
+</body>
+</html>

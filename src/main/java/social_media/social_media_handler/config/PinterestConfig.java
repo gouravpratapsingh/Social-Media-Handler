@@ -19,5 +19,18 @@ public class PinterestConfig {
     public String getAccessToken() {
         return accessToken;
     }
+@Value("${pinterest.client-id:YOUR_DEFAULT_ID}")
+private String clientId;
+
+@Value("${pinterest.client-secret}")
+private String clientSecret;
+
+@Value("${pinterest.redirect-uri:http://localhost:8082/api/pinterest/callback}")
+private String redirectUri;
+
+
+public String getClientId() { return clientId; }
+public String getClientSecret() { return clientSecret; }
+public String getRedirectUri() { return redirectUri; }
 }
 
