@@ -7,21 +7,36 @@ import org.springframework.web.bind.annotation.*;
 import social_media.social_media_handler.service.whatsapp.WhatsAppAuthService;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @RestController
 @RequestMapping("/oauth/whatsapp")
-@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class WhatsAppOAuthController {
 
     private final WhatsAppAuthService authService;
 
-    // STEP 1: Frontend asks for Facebook/WhatsApp Login URL
-    @GetMapping("/connect")
-    public ResponseEntity<String> connect(@RequestParam String userId) {
-        String url = authService.getAuthorizationUrl(userId);
-        return ResponseEntity.ok(url);
+    public WhatsAppOAuthController(WhatsAppAuthService authService) {
+        this.authService = authService;
     }
+
+    // STEP 1: Frontend asks for Facebook/WhatsApp Login URL
+@GetMapping("/connect")
+public void connect(HttpServletResponse response) throws IOException {
+    String redirectUri = URLEncoder.encode(
+            "http://localhost:8082/oauth/whatsapp/callback",
+            StandardCharsets.UTF_8
+    );
+    String authUrl =
+            "https://www.facebook.com/v18.0/dialog/oauth" +
+            "?client_id=1272276504709251" +
+            "&redirect_uri=" + redirectUri +
+            "&state=whatsapp_auth" +
+            "&scope=whatsapp_business_management,whatsapp_business_messaging";
+
+    response.sendRedirect(authUrl);
+}
 
     // STEP 2: Facebook redirects back here
     @GetMapping("/callback")

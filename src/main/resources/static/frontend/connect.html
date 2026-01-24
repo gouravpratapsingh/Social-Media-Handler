@@ -288,11 +288,13 @@
       // Platform-specific OAuth endpoints
       const oauthEndpoints = {
         'YOUTUBE': 'http://localhost:8082/oauth/youtube/connect',
-        'LINKEDIN': 'http://localhost:8082/oauth/linkedin/connect',
+        'LINKEDIN': 'http://localhost:8082/oauth/linkedin/connect?userId=' 
+      + encodeURIComponent(localStorage.getItem("userEmail") || ''),
+
         'TWITTER': 'http://localhost:8082/oauth/twitter/connect',
         'PINTEREST': 'http://localhost:8082/oauth/pinterest/connect',
         'WHATSAPP': 'http://localhost:8082/oauth/whatsapp/connect'
-      };
+        };
 
       // Check if this platform has a direct OAuth endpoint
       if (oauthEndpoints[channel]) {

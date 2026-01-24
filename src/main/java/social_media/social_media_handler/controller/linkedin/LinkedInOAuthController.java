@@ -16,16 +16,23 @@ import social_media.social_media_handler.service.linkedin.LinkedInAuthService;
 @RequiredArgsConstructor
 public class LinkedInOAuthController {
 
-    private final LinkedInAuthService linkedInAuthService;
+    public final LinkedInAuthService linkedInAuthService;
 
     /**
      * STEP 1: Redirect user to LinkedIn authorization page
      */
     @GetMapping("/connect")
-    public ResponseEntity<String> connect(@RequestParam String userId) {
-        String authUrl = linkedInAuthService.getAuthorizationUrl(userId);
-        return ResponseEntity.ok(authUrl);
-    }
+public void connect(
+        @RequestParam String userId,
+        HttpServletResponse response
+) throws IOException {
+
+    String authUrl = linkedInAuthService.getAuthorizationUrl(userId);
+
+    // 🔥 THIS IS THE FIX
+    response.sendRedirect(authUrl);
+}
+
 
     /**
      * STEP 2: LinkedIn redirects here after user consent

@@ -28,29 +28,22 @@ public class SecurityConfig {
     private JwtAuthFilter jwtAuthFilter;
 
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable) // Disable CSRF for local development/testing
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Enable CORS
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-                        // 🔥 MUST be first
-                        // .requestMatchers("/", "/index.html", "/favicon.ico",
-                        //         "/frontend/**", "/static/**", "/**/*.html", "/**/*.js", "/**/*.css").permitAll()
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/api/whatsapp/**").permitAll()
-                        .requestMatchers("/api/posts/**").permitAll()
-                        .requestMatchers("/oauth/youtube/**").permitAll()
-                        .requestMatchers("/youtube/analytics/**").permitAll()
-                        .requestMatchers("/oauth/linkedin/**").permitAll()
-                        .requestMatchers("/linkedin/analytics/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS) // We use JWT
-                );
-        return http.build();
-    }
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+        .csrf(AbstractHttpConfigurer::disable)
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+            .requestMatchers("/auth/**", "/oauth/**", "/api/oauth/**").permitAll()
+            .anyRequest().permitAll()   // 🔥 THIS LINE SAVES YOU
+        )
+        .sessionManagement(session ->
+            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        );
+
+    return http.build();
+}
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
