@@ -1,17 +1,20 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  const listViewBtn = document.getElementById("listViewBtn");
-  const calendarViewBtn = document.getElementById("calendarViewBtn");
+  const listBtn = document.getElementById("listBtn");
+  const calendarBtn = document.getElementById("calendarBtn");
 
   const listViewSection = document.getElementById("listViewContent");
   const calendarViewSection = document.getElementById("calendarViewContent");
+  const postTabsContainer = document.getElementById("postTabsContainer");
+  const upcomingViewContent = document.getElementById("upcomingViewContent");
+  const pastViewContent = document.getElementById("pastViewContent");
 
   const calendarTitle = document.getElementById("calendarTitle");
   const calendarGrid = document.getElementById("calendarGrid");
   const prevMonthBtn = document.getElementById("prevMonth");
   const nextMonthBtn = document.getElementById("nextMonth");
 
-  if (!listViewBtn || !calendarViewBtn) return;
+  if (!listBtn || !calendarBtn) return;
 
   let allPosts = []; // Store posts globally
 
@@ -29,21 +32,37 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ===== VIEW TOGGLE =====
-  listViewBtn.onclick = () => {
-    listViewSection.classList.remove("hidden");
+  // ===== VIEW TOGGLE HANDLERS =====
+  listBtn.onclick = () => {
+    upcomingViewContent.classList.remove("hidden");
+    pastViewContent.classList.add("hidden");
     calendarViewSection.classList.add("hidden");
+    postTabsContainer.classList.remove("hidden");
 
-    listViewBtn.classList.add("bg-white", "text-blue-600", "shadow");
-    calendarViewBtn.classList.remove("bg-white", "text-blue-600", "shadow");
+    listBtn.classList.add("active");
+    calendarBtn.classList.remove("active");
+
+    // Remove sliding background from container
+    const btnGroup = document.querySelector(".view-btn-group");
+    if (btnGroup) {
+      btnGroup.classList.remove("calendar-active");
+    }
   };
 
-  calendarViewBtn.onclick = async () => {
+  calendarBtn.onclick = async () => {
     calendarViewSection.classList.remove("hidden");
-    listViewSection.classList.add("hidden");
+    upcomingViewContent.classList.add("hidden");
+    pastViewContent.classList.add("hidden");
+    postTabsContainer.classList.add("hidden");
 
-    calendarViewBtn.classList.add("bg-white", "text-blue-600", "shadow");
-    listViewBtn.classList.remove("bg-white", "text-blue-600", "shadow");
+    calendarBtn.classList.add("active");
+    listBtn.classList.remove("active");
+
+    // Add sliding background to container
+    const btnGroup = document.querySelector(".view-btn-group");
+    if (btnGroup) {
+      btnGroup.classList.add("calendar-active");
+    }
 
     // Fetch posts and render calendar
     try {
@@ -81,7 +100,7 @@ function renderCalendar(posts = []) {
   // Empty cells
   for (let i = 0; i < firstDay; i++) {
     calendarGrid.innerHTML += `
-      <div class="bg-white/50 h-28 rounded-lg border border-cyan-200/30"></div>
+      <div class="bg-white/50 h-20 rounded-lg border border-cyan-200/30"></div>
     `;
   }
 
@@ -101,13 +120,13 @@ function renderCalendar(posts = []) {
     const dayPosts = postsByDate[dateKey] || [];
 
     calendarGrid.innerHTML += `
-      <div class="bg-white/60 h-28 p-3 border border-cyan-200/50 hover:border-cyan-400/50 transition-all rounded-lg group backdrop-blur-sm">
-        <div class="text-sm font-bold text-cyan-600 mb-1.5">${day}</div>
+      <div class="bg-white/60 h-20 p-2 border border-cyan-200/50 hover:border-cyan-400/50 transition-all rounded-lg group backdrop-blur-sm">
+        <div class="text-xs font-bold text-cyan-600 mb-0.5">${day}</div>
 
-        <div class="space-y-1">
+        <div class="space-y-0.5">
           ${
             dayPosts.slice(0, 2).map(post => `
-              <div class="text-[11px] px-2 py-1 rounded-md bg-cyan-100/50 text-cyan-700 font-medium truncate border border-cyan-300/50 group-hover:bg-cyan-200/60 transition">
+              <div class="text-[9px] px-1.5 py-0.5 rounded-sm bg-cyan-100/50 text-cyan-700 font-medium truncate border border-cyan-300/50 group-hover:bg-cyan-200/60 transition">
                 ${post.platform} • ${post.content}
               </div>
             `).join("")
@@ -115,7 +134,7 @@ function renderCalendar(posts = []) {
 
           ${
             dayPosts.length > 2
-              ? `<div class="text-[10px] text-cyan-600 font-bold">
+              ? `<div class="text-[8px] text-cyan-600 font-bold">
                    +${dayPosts.length - 2} more
                  </div>`
               : ""

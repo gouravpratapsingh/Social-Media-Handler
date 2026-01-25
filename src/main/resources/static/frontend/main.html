@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Graphura – Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
 
@@ -40,59 +41,289 @@
       border-bottom: 2px solid #2563eb;
       color: #2563eb;
     }
+
+    /* ===== VIEW TOGGLE BUTTONS ===== */
+    .view-btn-group {
+      position: relative;
+      display: inline-flex;
+      gap: 0;
+      background: #f1f5f9;
+      border-radius: 12px;
+      padding: 4px;
+      border: 1.5px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .view-btn {
+      position: relative;
+      z-index: 2;
+      padding: 8px 22px;
+      border: none;
+      border-radius: 10px;
+      background: transparent;
+      color: #64748b;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      flex: 1;
+      white-space: nowrap;
+    }
+
+    .view-btn.active {
+      color: white;
+    }
+
+    .view-btn:hover:not(.active) {
+      color: #475569;
+    }
+
+    /* Sliding Background */
+    .view-btn-group::before {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      top: 4px;
+      left: 4px;
+      width: calc(50% - 2px);
+      height: calc(100% - 8px);
+      background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+      border-radius: 10px;
+      transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.28);
+
+    }
+
+    .view-btn-group.calendar-active::before {
+      left: calc(50% + 2px);
+    }
+
+    /* ===== MOBILE SIDEBAR ===== */
+    .mobile-menu-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(6, 182, 212, 0.1);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex-direction: column;
+      padding: 0;
+    }
+
+    .mobile-menu-btn:hover {
+      background: rgba(6, 182, 212, 0.2);
+    }
+
+    .mobile-menu-btn span {
+      width: 20px;
+      height: 2px;
+      background: #0891b2;
+      display: block;
+      margin: 3px 0;
+      transition: all 0.3s ease;
+    }
+
+    .mobile-sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 30;
+    }
+
+    .mobile-sidebar-overlay.open {
+      background: rgba(0, 0, 0, 0.4);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mobile-sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      width: 256px;
+      background: white;
+      border-r: 1px solid rgba(6, 182, 212, 0.3);
+      transform: translateX(-100%);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 40;
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+      overflow-y: auto;
+    }
+
+    .mobile-sidebar.open {
+      transform: translateX(0);
+    }
+
+    @media (min-width: 1024px) {
+      .mobile-menu-btn {
+        display: none !important;
+      }
+      .mobile-sidebar-overlay {
+        display: none !important;
+      }
+      .mobile-sidebar {
+        display: none !important;
+      }
+    }
+
+    /* Make mobile button more visible */
+    .mobile-menu-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.25);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      flex-direction: column;
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .mobile-menu-btn:hover {
+      background: rgba(6, 182, 212, 0.2);
+      border-color: rgba(6, 182, 212, 0.4);
+    }
+
+    .mobile-menu-btn span {
+      width: 18px;
+      height: 2px;
+      background: #0891b2;
+      display: block;
+      margin: 2.5px 0;
+      transition: all 0.25s ease;
+      border-radius: 1px;
+    }
   </style>
 </head>
 
 <body class="bg-gradient-to-br from-slate-50 via-white to-cyan-50/30 text-slate-800 min-h-screen">
 
+<!-- MOBILE SIDEBAR OVERLAY -->
+<div id="mobileSidebarOverlay" class="mobile-sidebar-overlay" onclick="closeMobileSidebar()"></div>
+
+<!-- MOBILE SIDEBAR -->
+<aside id="mobileSidebar" class="mobile-sidebar">
+  <!-- LOGO -->
+  <div class="px-6 py-6 border-b flex items-center gap-3">
+    <img src="assets/graphuralogo.png" class="h-10" />
+  </div>
+
+  <!-- NAV -->
+  <nav class="px-4 py-6 space-y-1 flex-1">
+    <a href="main.html" class="sidebar-link sidebar-active" onclick="closeMobileSidebar()">
+      Dashboard
+    </a>
+    <a href="connect.html" class="sidebar-link" onclick="closeMobileSidebar()">
+      Channels
+    </a>
+    <a href="analysis.html" class="sidebar-link" onclick="closeMobileSidebar()">
+      Analytics
+    </a>
+    <a href="help.html" class="sidebar-link" onclick="closeMobileSidebar()">
+      Help & Guide
+    </a>
+  </nav>
+
+  <!-- USER PROFILE -->
+  <div class="p-4 border-t relative">
+    <button id="mobileSidebarProfileBtn"
+      class="w-full flex items-center gap-3 p-3 rounded-xl bg-white shadow-sm hover:shadow transition">
+      <div class="w-9 h-9 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center font-bold">
+        <img src="assets/user_icon.png" class="w-5 h-5" />
+      </div>
+      <div class="truncate text-left">
+        <p id="mobileSidebarUserName" class="text-sm font-semibold">User</p>
+        <p id="mobileSidebarUserEmail" class="text-xs text-gray-500 truncate"></p>
+      </div>
+    </button>
+
+    <!-- DROPDOWN -->
+    <div id="mobileSidebarProfileMenu"
+      class="hidden absolute bottom-20 left-4 right-4 bg-white border rounded-xl shadow-xl overflow-hidden z-50">
+      <button onclick="logout()"
+        class="w-full px-4 py-3 text-left text-red-600 hover:bg-red-50 font-medium">
+        Logout
+      </button>
+    </div>
+  </div>
+</aside>
+
 <!-- ================= APP LAYOUT ================= -->
 <div class="flex min-h-screen">
 
   <!-- ================= SIDEBAR ================= -->
-  <aside class="fixed left-0 top-0 h-screen w-64 bg-gradient-to-b from-white/90 to-cyan-50/50 backdrop-blur-xl border-r border-cyan-200/30 flex flex-col justify-between">
+  <aside class="hidden lg:flex fixed left-0 top-0 h-screen w-64 bg-gradient-to-b from-white/90 to-cyan-50/50 backdrop-blur-xl border-r border-cyan-200/30 flex flex-col justify-between">
 
     <!-- LOGO -->
     <div class="px-6 py-6 border-b flex items-center gap-3">
-      <img src="assets/graphuralogo.png" class="h-10" />
+      <img src="assets/graphuralogo.png" class="h-16" />
     </div>
 
     <!-- NAV -->
     <nav class="px-4 py-6 space-y-1 flex-1">
 
-      <a href="home.html" class="sidebar-link">
-        Home
-      </a>
       <a href="main.html" class="sidebar-link sidebar-active">
         Dashboard
       </a>
       <a href="connect.html" class="sidebar-link">
         Channels
       </a>
-      <a href="library.html" class="sidebar-link">
-        Library
+      <a href="analysis.html" class="sidebar-link">
+        Analytics
       </a>
-
-      
-
-      
+      <a href="help.html" class="sidebar-link">
+        Help & Guide
+      </a>
 
     </nav>
 
     <!-- USER PROFILE -->
-    <div class="p-4 border-t relative">
+    <div class="p-4 relative">
 
-      <button id="sidebarProfileBtn"
-        class="w-full flex items-center gap-3 p-3 rounded-xl bg-white shadow-sm hover:shadow transition">
+      <!-- Sidebar Profile (place LAST in sidebar) -->
+<button id="sidebarProfileBtn"
+  class="mt-auto w-full flex items-center gap-3
+         px-4 py-3
+         border-t border-slate-200
+         hover:bg-slate-50
+         transition">
 
-        <div class="w-9 h-9 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center font-bold">
-          <img src="assets/user_icon.png" class="w-5 h-5" />
-        </div>
+  <!-- Avatar -->
+  <div class="w-10 h-10 rounded-full
+              bg-cyan-100
+              flex items-center justify-center
+              shrink-0">
+    <img src="assets/user_icon.png" class="w-5 h-5" alt="User" />
+  </div>
 
-        <div class="truncate text-left">
-          <p id="sidebarUserName" class="text-sm font-semibold">User</p>
-          <p id="sidebarUserEmail" class="text-xs text-gray-500 truncate"></p>
-        </div>
-      </button>
+  <!-- User Info -->
+  <div class="min-w-0 text-left">
+    <p id="sidebarUserName"
+       class="text-sm font-semibold text-slate-800 leading-tight">
+      User
+    </p>
+
+    <!-- Email: readable, not truncated harshly -->
+    <p id="sidebarUserEmail"
+       class="text-xs text-slate-500 leading-tight break-all">
+      user@email.com
+    </p>
+  </div>
+
+</button>
+
 
       <!-- DROPDOWN -->
       <div id="sidebarProfileMenu"
@@ -109,86 +340,118 @@
 
   </aside>
 <!-- ================= MAIN CONTENT ================= -->
-<main class="ml-64 flex-1 px-10 py-8 bg-gradient-to-br from-slate-50 via-white to-cyan-50/40 relative overflow-hidden">
+<main class="lg:ml-64 flex-1 px-4 lg:px-10 py-4 lg:py-8 bg-gradient-to-br from-slate-50 via-white to-cyan-50/40 relative overflow-y-auto overflow-x-hidden max-h-screen w-full">
   <!-- Background gradient blobs -->
   <div class="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-cyan-300/15 to-blue-300/10 rounded-full blur-3xl pointer-events-none"></div>
   <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-indigo-300/10 to-cyan-300/10 rounded-full blur-3xl pointer-events-none"></div>
 
   <!-- ===== DASHBOARD HEADER ===== -->
-  <header class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-10">
+  <header class="mb-6 lg:mb-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 
-    <div>
-      <h1 class="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-cyan-600 to-blue-600">
-        Dashboard Overview
-      </h1>
-      <p class="text-slate-500 mt-2 font-medium">
-        Welcome back. Your performance overview appears below.
-      </p>
+    <!-- TOP ROW: MOBILE BUTTON & TITLE -->
+    <div class="flex items-start gap-3 sm:gap-4">
+      <!-- MOBILE MENU BUTTON -->
+      <button id="mobileMenuBtn" class="mobile-menu-btn lg:hidden flex-shrink-0" onclick="openMobileSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <!-- TITLE AND DESCRIPTION -->
+      <div class="flex-1 min-w-0">
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-cyan-600 to-blue-600">
+          Dashboard
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1 font-medium">
+          Unified view of activity, performance, and insights.
+        </p>
+      </div>
     </div>
 
-    <div class="flex items-center gap-4">
-
-      <!-- VIEW TOGGLE (REQUIRED BY calender.js) -->
-      <div class="flex bg-gradient-to-r from-cyan-100/40 to-blue-100/40 rounded-xl p-1 border border-cyan-200/50 backdrop-blur-sm">
-        <button
-          id="listViewBtn"
-          class="px-4 py-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-lg font-medium transition-all hover:bg-blue-600">
-          📋 List
-        </button>
-
-        <button
-          id="calendarViewBtn"
-          class="px-4 py-2 rounded-lg text-slate-600 hover:text-cyan-600 font-medium transition-colors">
-          📅 Calendar
-        </button>
-      </div>
-
-      <!-- CREATE POST (EXPLICIT MODAL CALL) -->
-      
+    <!-- BOTTOM ROW: BUTTONS (RIGHT SIDE ON LARGE SCREENS) -->
+    <div class="flex items-center gap-3 sm:gap-4 flex-wrap">
+      <!-- SCHEDULE POST BUTTON -->
       <button
         onclick="openModal()"
-        class="flex items-center gap-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-white px-6 py-3 rounded-xl text-sm font-bold transition-all active:scale-95 hover:-translate-y-0.5">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        class="flex items-center justify-center gap-1 sm:gap-2 bg-gradient-to-r from-cyan-400 to-blue-500 text-white px-3 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold transition-all active:scale-95 hover:-translate-y-0.5">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
         </svg>
-        New Post
+        <span class="hidden sm:inline">Schedule Post</span>
+        <span class="sm:hidden">Schedule</span>
       </button>
+
+      <!-- VIEW TOGGLE BUTTONS -->
+      <div class="view-btn-group">
+        <button id="listBtn" class="view-btn active">📋 List</button>
+        <button id="calendarBtn" class="view-btn">📅 Calendar</button>
+      </div>
     </div>
   </header>
 
   <!-- ===== CONTENT CARD ===== -->
-  <section class="relative z-10 bg-white/70 backdrop-blur-md rounded-2xl border border-cyan-200/30 p-8 flex flex-col max-h-[calc(100vh-200px)] overflow-hidden">
+  <section class="relative z-10 bg-white/70 backdrop-blur-md
+       rounded-2xl border
+       shadow-[0_4px_12px_rgba(6,182,212,0.28)]
+       p-8 flex flex-col">
 
-  <!-- ===== LIST VIEW (CARDS WILL RENDER HERE) ===== -->
-  <section id="listViewContent" class="overflow-y-auto flex-1">
+  <!-- ===== TAB BUTTONS FOR UPCOMING/PAST (ONLY IN LIST VIEW) ===== -->
+  <div id="postTabsContainer" class="flex gap-8 mb-8 border-b border-slate-200">
+    <button id="upcomingTab" class="relative pb-4 font-semibold text-slate-600 transition-all duration-300 hover:text-slate-900" onclick="switchPostTab('upcoming')">
+      Scheduled Posts
+      <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full"></div>
+    </button>
+    
+    <button id="pastTab" class="relative pb-4 font-semibold text-slate-400 transition-all duration-300 hover:text-slate-600" onclick="switchPostTab('past')">
+      Completed Posts
+      <div class="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full transition-all duration-300"></div>
+    </button>
+  </div>
+
+  <!-- ===== LIST VIEW (UPCOMING POSTS) ===== -->
+  <section id="upcomingViewContent" class="flex-1">
+    <p class="text-gray-500 italic text-center py-16">
+      Your scheduled posts list will appear here.
+    </p>
+  </section>
+
+  <!-- ===== PAST UPDATES VIEW ===== -->
+  <section id="pastViewContent" class="hidden flex-1">
+    <p class="text-gray-500 italic text-center py-16">
+      Your past updates will appear here.
+    </p>
+  </section>
+
+  <!-- ===== OLD LIST VIEW (KEPT FOR CALENDAR VIEW) ===== -->
+  <section id="listViewContent" class="flex-1 hidden">
     <p class="text-gray-500 italic text-center py-16">
       Your scheduled posts list will appear here.
     </p>
   </section>
 
     <!-- ===== CALENDAR VIEW ===== -->
-    <section id="calendarViewContent" class="hidden overflow-y-auto flex-1">
+    <section id="calendarViewContent" class="hidden flex-1">
 
-      <div class="flex items-center justify-between mb-8">
+      <div class="flex items-center justify-between mb-2">
 
         <!-- MONTH CONTROLS (REQUIRED BY calender.js) -->
-        <div class="flex items-center bg-gradient-to-r from-cyan-100/40 to-blue-100/40 rounded-lg p-1 border border-cyan-200/50">
+        <div class="flex items-center bg-gradient-to-r from-cyan-100/40 to-blue-100/40 rounded-lg p-0.5 border border-cyan-200/50">
           <button
             id="prevMonth"
             type="button"
-            class="p-2 rounded-md hover:bg-cyan-200/50 transition-colors text-slate-600 hover:text-cyan-600 font-bold text-lg">
+            class="p-1 rounded-md hover:bg-cyan-200/50 transition-colors text-slate-600 hover:text-cyan-600 font-bold text-sm">
             ←
           </button>
 
           <h2
             id="calendarTitle"
-            class="text-lg font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 px-4 min-w-[180px] text-center">
+            class="text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 px-3 min-w-[140px] text-center">
           </h2>
 
           <button
             id="nextMonth"
             type="button"
-            class="p-2 rounded-md hover:bg-cyan-200/50 transition-colors text-slate-600 hover:text-cyan-600 font-bold text-lg">
+            class="p-1 rounded-md hover:bg-cyan-200/50 transition-colors text-slate-600 hover:text-cyan-600 font-bold text-sm">
             →
           </button>
         </div>
@@ -196,26 +459,18 @@
       </div>
 
       <!-- WEEK HEADER -->
-      <div class="grid grid-cols-7 text-center text-xs font-bold bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-700 uppercase mb-3 rounded-lg py-2 border border-cyan-200/50">
-        <span class="py-2">Sun</span><span class="py-2">Mon</span><span class="py-2">Tue</span>
-        <span class="py-2">Wed</span><span class="py-2">Thu</span><span class="py-2">Fri</span><span class="py-2">Sat</span>
+      <div class="grid grid-cols-7 text-center text-xs font-bold bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-cyan-700 uppercase mb-1 rounded-lg py-0.5 border border-cyan-200/50">
+        <span class="py-0.5">Sun</span><span class="py-0.5">Mon</span><span class="py-0.5">Tue</span>
+        <span class="py-0.5">Wed</span><span class="py-0.5">Thu</span><span class="py-0.5">Fri</span><span class="py-0.5">Sat</span>
       </div>
 
       <!-- CALENDAR GRID (REQUIRED ID) -->
       <div
         id="calendarGrid"
-        class="grid grid-cols-7 gap-1 bg-gradient-to-br from-cyan-100/20 to-blue-100/20 p-2 border border-cyan-200/40 rounded-lg overflow-hidden">
+        class="grid grid-cols-7 gap-0.5 bg-gradient-to-br from-cyan-100/20 to-blue-100/20 p-0.5 border border-cyan-200/40 rounded-lg overflow-hidden">
       </div>
 
     </section>
-
-    <!-- ===== EMPTY STATE (USED BY switchTab) ===== -->
-    <div id="contentArea" class="relative z-10 text-center mt-16">
-      <h3 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600">Welcome to Graphura 👋</h3>
-      <p class="text-slate-500 mt-3 font-medium">
-        Connect a channel to start posting and managing content
-      </p>
-    </div>
 
   </section>
 
@@ -328,6 +583,7 @@
             <div>
                 <label class="block text-xs font-semibold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 mb-1">📱 Platform</label>
                 <select id="platform" class="w-full border border-slate-300 rounded-lg p-2 bg-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition font-medium text-slate-700 text-sm">
+                    <option value="FACEBOOK">Facebook</option>
                     <option value="WHATSAPP">WhatsApp</option>
                     <option value="LINKEDIN">LinkedIn</option>
                     <option value="TWITTER">Twitter</option>
@@ -340,8 +596,19 @@
                 <input type="text" id="recipient" placeholder="e.g. 919876543210" class="w-full border border-slate-300 rounded-lg p-2 bg-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition font-medium text-slate-700 placeholder-slate-400 text-sm">
             </div>
             <div>
-                <label class="block text-xs font-semibold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 mb-1">💬 Message Content</label>
-                <textarea id="content" rows="2" class="w-full border border-slate-300 rounded-lg p-2 bg-white focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100 transition font-medium text-slate-700 placeholder-slate-400 resize-none text-sm" placeholder="Type your message here..." required></textarea>
+                <label class="block text-xs font-semibold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 mb-1">
+  💬 Message Content
+</label>
+
+<textarea id="content" rows="5"
+  class="w-full border border-slate-300 rounded-lg
+         p-3 bg-white
+         focus:border-cyan-400 focus:ring-2 focus:ring-cyan-100
+         transition font-medium text-slate-700
+         placeholder-slate-400 resize-none text-sm"
+  placeholder="Type your message here..." required>
+</textarea>
+
             </div>
             <div>
                 <label class="block text-xs font-semibold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 mb-1">🖼️ Media (Optional)</label>
@@ -380,18 +647,23 @@
 
   function logout() {
     localStorage.clear();
-    window.location.href = "login.html";
+    window.location.href = "home.html";
   }
 
   window.onload = () => {
     const token = localStorage.getItem("authToken");
     if (!token) window.location.href = "home.html";
 
-    document.getElementById("sidebarUserEmail").textContent =
-      localStorage.getItem("userEmail") || "";
+    const userEmail = localStorage.getItem("userEmail") || "";
+    const userName = localStorage.getItem("userName") || "User";
 
-    document.getElementById("sidebarUserName").textContent =
-      localStorage.getItem("userName") || "User";
+    // Update desktop sidebar
+    document.getElementById("sidebarUserEmail").textContent = userEmail;
+    document.getElementById("sidebarUserName").textContent = userName;
+
+    // Update mobile sidebar
+    document.getElementById("mobileSidebarUserEmail").textContent = userEmail;
+    document.getElementById("mobileSidebarUserName").textContent = userName;
   };
   
 // Modal control functions
@@ -490,120 +762,244 @@ document.getElementById('scheduleForm').addEventListener('submit', async (e) => 
         alert("Server se connection fail ho gaya.");
     }
 });
+
+// Store posts data globally
+let allPosts = [];
+let currentPostView = 'upcoming';
+
+// Switch between Upcoming and Past posts
+function switchPostTab(tabName) {
+    currentPostView = tabName;
+    
+    const upcomingBtn = document.getElementById('upcomingTab');
+    const pastBtn = document.getElementById('pastTab');
+    
+    if (tabName === 'upcoming') {
+        // Active: Upcoming, Inactive: Past
+        upcomingBtn.classList.remove('text-slate-400');
+        upcomingBtn.classList.add('text-slate-900');
+        upcomingBtn.innerHTML = `
+          Scheduled Posts
+          <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full"></div>
+        `;
+        
+        pastBtn.classList.remove('text-slate-900');
+        pastBtn.classList.add('text-slate-400');
+        pastBtn.innerHTML = `
+          Completed Posts
+          <div class="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full transition-all duration-300"></div>
+        `;
+    } else {
+        // Active: Past, Inactive: Upcoming
+        pastBtn.classList.remove('text-slate-400');
+        pastBtn.classList.add('text-slate-900');
+        pastBtn.innerHTML = `
+          Completed Posts
+          <div class="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full"></div>
+        `;
+        
+        upcomingBtn.classList.remove('text-slate-900');
+        upcomingBtn.classList.add('text-slate-400');
+        upcomingBtn.innerHTML = `
+          Scheduled Posts
+          <div class="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full transition-all duration-300"></div>
+        `;
+    }
+    
+    // Toggle content visibility
+    document.getElementById('upcomingViewContent').classList.toggle('hidden');
+    document.getElementById('pastViewContent').classList.toggle('hidden');
+    
+    // Render appropriate posts
+    if (tabName === 'upcoming') {
+        renderUpcomingPosts();
+    } else {
+        renderPastPosts();
+    }
+}
+
 async function loadPosts() {
-    const listView = document.getElementById('listViewContent');
     const contentArea = document.getElementById('contentArea');
     try {
         const response = await fetch('http://localhost:8082/api/posts/all', {
             headers: { 'Authorization': 'Bearer ' + localStorage.getItem('authToken') }
         });
-        const posts = await response.json();
+        allPosts = await response.json();
 
-        if (posts.length === 0) {
-            listView.innerHTML = `<p class="text-slate-500 italic text-center py-16 font-medium">No posts found.</p>`;
+        if (allPosts.length === 0) {
+            document.getElementById('upcomingViewContent').innerHTML = `
+              <div class="flex flex-col items-center justify-center py-20 px-6 rounded-2xl bg-gradient-to-br from-blue-50/50 to-cyan-50/30 border border-cyan-200/30">
+                <div class="w-20 h-20 rounded-full bg-gradient-to-br from-cyan-100 to-blue-100 flex items-center justify-center text-5xl mb-6 shadow-lg border border-cyan-200/50">
+                  📋
+                </div>
+                <h3 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 mb-3">No Posts Yet</h3>
+                <p class="text-slate-600 text-center max-w-sm font-medium mb-6">Start by creating your first post to see it displayed here</p>
+                <button onclick="openModal()" class="px-6 py-3 bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-xl font-bold text-sm hover:shadow-lg transition-all active:scale-95">
+                  ✨ Create First Post
+                </button>
+              </div>
+            `;
             if(contentArea) contentArea.classList.remove('hidden');
             return;
         }
-            if(contentArea) contentArea.classList.add('hidden');
-        let cardsHtml = `
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-`;
-     
+        if(contentArea) contentArea.classList.add('hidden');
+        
+        // Render upcoming posts by default
+        renderUpcomingPosts();
 
-posts.forEach(post => {
-  const statusStyle =
-    post.status === "SENT"
-      ? "bg-cyan-100 text-cyan-700"
-      : post.status === "FAILED"
-      ? "bg-red-100 text-red-700"
-      : "bg-blue-100 text-blue-700";
+    } catch (error) {
+        console.error("Error loading posts:", error);
+        document.getElementById('upcomingViewContent').innerHTML = `<p class="text-red-500 italic text-center">Error loading posts.</p>`;
+    }
+}
 
-  const platformIcon =
-    post.platform === "WHATSAPP" ? "💬" :
-    post.platform === "LINKEDIN" ? "in" :
-    post.platform === "TWITTER" ? "𝕏" :
-    post.platform === "YOUTUBE" ? "▶" :
-    post.platform === "PINTEREST" ? "P" : "📢";
-
-  const accentColor =
-    post.platform === "WHATSAPP" ? "green" :
-    post.platform === "LINKEDIN" ? "blue" :
-    post.platform === "TWITTER" ? "slate" :
-    post.platform === "YOUTUBE" ? "red" :
-    post.platform === "PINTEREST" ? "rose" : "cyan";
-
-  const gradientBg =
-    post.platform === "WHATSAPP" ? "radial-gradient(circle at 100% 100%, rgba(52,211,153,0.15) 0%, rgba(16,185,129,0.05) 40%, rgba(255,255,255,0) 70%)" :
-    post.platform === "LINKEDIN" ? "radial-gradient(circle at 100% 100%, rgba(59,130,246,0.15) 0%, rgba(99,102,241,0.05) 40%, rgba(255,255,255,0) 70%)" :
-    post.platform === "TWITTER" ? "radial-gradient(circle at 100% 100%, rgba(71,85,105,0.15) 0%, rgba(71,85,105,0.05) 40%, rgba(255,255,255,0) 70%)" :
-    post.platform === "YOUTUBE" ? "radial-gradient(circle at 100% 100%, rgba(239,68,68,0.15) 0%, rgba(234,88,12,0.05) 40%, rgba(255,255,255,0) 70%)" :
-    post.platform === "PINTEREST" ? "radial-gradient(circle at 100% 100%, rgba(220,38,38,0.15) 0%, rgba(225,29,72,0.05) 40%, rgba(255,255,255,0) 70%)" :
-    "radial-gradient(circle at 100% 100%, rgba(6,182,212,0.12) 0%, rgba(59,130,246,0.05) 40%, rgba(255,255,255,0) 70%)";
-
-  cardsHtml += `
-    <div class="group relative rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer border hover:border-cyan-300 flex flex-col h-full" style="background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7)), ${gradientBg}; backdrop-filter: blur(8px); border-color: rgba(203,213,225,0.6);">
-      <div class="h-1 w-full bg-gradient-to-r from-${accentColor}-400 to-${accentColor === 'cyan' ? 'blue' : accentColor === 'green' ? 'emerald' : accentColor === 'blue' ? 'indigo' : accentColor === 'slate' ? 'slate' : accentColor === 'red' ? 'orange' : 'rose'}-600"></div>
-      
-      <div class="p-4 relative z-10 flex flex-col flex-1">
-        <!-- Header -->
-        <div class="flex items-start justify-between mb-3">
-          <div class="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-lg group-hover:scale-110 transition-transform duration-200 flex-shrink-0 font-bold text-slate-700">
-            ${platformIcon}
+// Render upcoming posts
+function renderUpcomingPosts() {
+    const now = new Date();
+    const upcomingPosts = allPosts.filter(post => new Date(post.scheduledTime) > now);
+    
+    const listView = document.getElementById('upcomingViewContent');
+    
+    if (upcomingPosts.length === 0) {
+        listView.innerHTML = `
+          <div class="flex flex-col items-center justify-center py-20 px-6 rounded-2xl bg-gradient-to-br from-blue-50/50 to-cyan-50/30 border border-cyan-200/30">
+            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-cyan-100 to-blue-100 flex items-center justify-center text-5xl mb-6 shadow-lg border border-cyan-200/50">
+              ⏳
+            </div>
+            <h3 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 mb-3">No Upcoming Posts</h3>
+            <p class="text-slate-600 text-center max-w-sm font-medium mb-6">All your scheduled posts are in the past. Create new ones!</p>
+            <button onclick="openModal()" class="px-6 py-3 bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-xl font-bold text-sm hover:shadow-lg transition-all active:scale-95">
+              ✨ Schedule New Post
+            </button>
           </div>
-          <div class="flex items-center gap-2 flex-shrink-0">
-            <span class="px-2 py-0.5 rounded-md text-xs font-semibold whitespace-nowrap ${statusStyle}">
-              ${post.status}
+        `;
+        return;
+    }
+    
+    renderPostCards(upcomingPosts, listView);
+}
+
+// Render past posts
+function renderPastPosts() {
+    const now = new Date();
+    const pastPosts = allPosts.filter(post => new Date(post.scheduledTime) <= now);
+    
+    const pastView = document.getElementById('pastViewContent');
+    
+    if (pastPosts.length === 0) {
+        pastView.innerHTML = `
+          <div class="flex flex-col items-center justify-center py-20 px-6 rounded-2xl bg-gradient-to-br from-green-50/50 to-emerald-50/30 border border-green-200/30">
+            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 flex items-center justify-center text-5xl mb-6 shadow-lg border border-green-200/50">
+              📜
+            </div>
+            <h3 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-emerald-600 mb-3">No Past Updates Yet</h3>
+            <p class="text-slate-600 text-center max-w-sm font-medium">Your completed scheduled posts will appear here once their scheduled time passes.</p>
+          </div>
+        `;
+        return;
+    }
+    
+    renderPostCards(pastPosts, pastView);
+}
+
+// Common function to render post cards
+function renderPostCards(posts, container) {
+    let cardsHtml = `
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+`;
+    
+    posts.forEach(post => {
+        const now = new Date();
+        const scheduledDate = new Date(post.scheduledTime);
+        const isPast = scheduledDate <= now;
+        
+        const statusStyle =
+            post.status === "SENT"
+                ? "bg-cyan-100 text-cyan-700"
+                : post.status === "FAILED"
+                ? "bg-red-100 text-red-700"
+                : isPast ? "bg-yellow-100 text-yellow-700" : "bg-blue-100 text-blue-700";
+
+        const platformIcon =
+            post.platform === "FACEBOOK" ? "assets/facebook.png" :
+            post.platform === "WHATSAPP" ? "assets/whatsapp.png" :
+            post.platform === "LINKEDIN" ? "assets/linkedin.png" :
+            post.platform === "TWITTER" ? "assets/twitter.png" :
+            post.platform === "YOUTUBE" ? "assets/youtube.png" :
+            post.platform === "PINTEREST" ? "assets/pintrest.png" : "assets/graphuralogo.png";
+
+        const accentColor =
+            post.platform === "FACEBOOK" ? "blue" :
+            post.platform === "WHATSAPP" ? "green" :
+            post.platform === "LINKEDIN" ? "blue" :
+            post.platform === "TWITTER" ? "slate" :
+            post.platform === "YOUTUBE" ? "red" :
+            post.platform === "PINTEREST" ? "rose" : "cyan";
+
+        const displayStatus = isPast && post.status === "PENDING" ? "SCHEDULED" : post.status;
+
+        cardsHtml += `
+    <div class="group relative rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer border border-slate-100 flex flex-col h-full bg-gradient-to-br from-white to-blue-50/40 hover:border-cyan-300/40">
+      
+      <div class="p-3 relative z-10 flex flex-col flex-1">
+        <!-- Header with Icon and Status -->
+        <div class="flex items-start justify-between mb-3 gap-2">
+          <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-${accentColor}-100 to-${accentColor === 'cyan' ? 'blue' : accentColor === 'green' ? 'emerald' : accentColor === 'blue' ? 'indigo' : accentColor === 'slate' ? 'blue' : accentColor === 'red' ? 'orange' : 'pink'}-100 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 flex-shrink-0 border border-${accentColor}-200/50 shadow-sm overflow-hidden p-1">
+            <img src="${platformIcon}" alt="${post.platform}" class="w-full h-full object-contain">
+          </div>
+          <div class="flex flex-col items-end gap-1 flex-shrink-0">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold whitespace-nowrap ${statusStyle} shadow-sm border border-opacity-30">
+              ${displayStatus}
             </span>
-            ${post.mediaUrl ? '<span class="px-2 py-0.5 rounded-md text-xs font-semibold bg-purple-100 text-purple-700 whitespace-nowrap">🖼️ Media</span>' : ''}
+            ${post.mediaUrl ? '<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-purple-100 to-pink-100 text-purple-600 whitespace-nowrap shadow-sm border border-purple-200/50">🖼️</span>' : ''}
           </div>
         </div>
 
+        <!-- Platform Title -->
+        <h3 class="text-sm font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-600 mb-1.5">${post.platform}</h3>
+
         <!-- Media Preview -->
         ${post.mediaUrl ? `
-          <div class="mb-3 rounded-lg overflow-hidden h-24 bg-slate-200 flex-shrink-0">
+          <div class="mb-3 rounded-lg overflow-hidden h-24 bg-gradient-to-br from-slate-100 to-slate-200 flex-shrink-0 border border-slate-200/60 shadow-sm">
             ${post.mediaUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? 
-              `<img src="${post.mediaUrl}" alt="media" class="w-full h-full object-cover">` :
-              `<video src="${post.mediaUrl}" class="w-full h-full object-cover"></video>`
+              `<img src="${post.mediaUrl}" alt="media" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">` :
+              `<video src="${post.mediaUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"></video>`
             }
           </div>
         ` : ''}
 
-        <!-- Content -->
-        <h3 class="text-sm font-bold text-slate-900 mb-0.5">${post.platform}</h3>
-        <p class="text-slate-600 text-xs mb-3 leading-relaxed line-clamp-2 flex-grow">
+        <!-- Content Preview -->
+        <p class="text-slate-700 text-xs mb-2 leading-relaxed line-clamp-2 flex-grow font-medium">
           ${post.content}
         </p>
 
-        <!-- Details -->
-        <div class="space-y-2 pt-2 border-t border-slate-100 text-xs flex-shrink-0">
-          <div class="flex items-center gap-2">
+        <!-- Details Section -->
+        <div class="space-y-2 pt-3 border-t border-slate-200/50">
+          <div class="flex items-center gap-2 text-xs">
             <span>⏰</span>
-            <span class="text-slate-600">${new Date(post.scheduledTime).toLocaleDateString()}</span>
+            <div>
+              <p class="text-slate-700 font-semibold">${scheduledDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
+            </div>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 text-xs">
             <span>📞</span>
-            <span class="text-slate-600 truncate">${post.recipient}</span>
+            <div>
+              <p class="text-slate-700 font-semibold truncate">${post.recipient}</p>
+            </div>
           </div>
         </div>
 
-        <!-- Button -->
-        <button onclick="openPostDetailsModal(${JSON.stringify(post).replace(/"/g, '&quot;')})" class="w-full mt-3 py-1.5 px-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg font-medium text-xs hover:shadow-md transition-all active:scale-95 group-hover:from-cyan-600 group-hover:to-blue-700 flex-shrink-0">
+        <!-- Action Button -->
+        <button onclick="openPostDetailsModal(${JSON.stringify(post).replace(/"/g, '&quot;')})" class="w-full mt-4 py-2 px-3 bg-gradient-to-r from-cyan-400 to-blue-500 text-white rounded-lg font-semibold text-xs hover:shadow-lg hover:from-cyan-500 hover:to-blue-600 transition-all active:scale-95 flex-shrink-0 border border-cyan-300/40">
           View Details
         </button>
       </div>
     </div>
   `;
-});
+    });
 
-cardsHtml += `</div>`;
-listView.innerHTML = cardsHtml;
-
-    } catch (error) {
-        console.error("Error loading posts:", error);
-        listView.innerHTML = `<p class="text-red-500 italic text-center">Error loading posts.</p>`;
-    }
-    
-
+    cardsHtml += `</div>`;
+    container.innerHTML = cardsHtml;
 }
 
 // Page load par posts load karein
@@ -616,12 +1012,13 @@ function openPostDetailsModal(post) {
     currentPost = post;
     
     const platformIcons = {
-        "WHATSAPP": "💬",
-        "LINKEDIN": "in",
-        "TWITTER": "𝕏",
-        "YOUTUBE": "▶",
-        "PINTEREST": "P",
-        "DEFAULT": "📢"
+        "FACEBOOK": "assets/facebook.png",
+        "WHATSAPP": "assets/whatsapp.png",
+        "LINKEDIN": "assets/linkedin.png",
+        "TWITTER": "assets/twitter.png",
+        "YOUTUBE": "assets/youtube.png",
+        "PINTEREST": "assets/pintrest.png",
+        "DEFAULT": "assets/graphuralogo.png"
     };
 
     const statusStyles = {
@@ -636,7 +1033,8 @@ function openPostDetailsModal(post) {
     document.getElementById('detailStatusBadge').textContent = post.status;
     document.getElementById('detailStatusBadge').className = `px-4 py-2 rounded-lg text-sm font-bold ${statusStyles[post.status] || statusStyles["PENDING"]}`;
     
-    document.getElementById('detailPlatformIcon').textContent = platformIcons[post.platform] || platformIcons["DEFAULT"];
+    const iconElement = document.getElementById('detailPlatformIcon');
+    iconElement.innerHTML = `<img src="${platformIcons[post.platform] || platformIcons['DEFAULT']}" alt="${post.platform}" class="w-full h-full object-contain p-2">`;
 
     // Display media if available - Check multiple field names
     const detailMediaContainer = document.getElementById('detailMediaContainer');
@@ -754,7 +1152,39 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+// Mobile Sidebar Functions
+function openMobileSidebar() {
+  const mobileSidebar = document.getElementById('mobileSidebar');
+  const overlay = document.getElementById('mobileSidebarOverlay');
+  mobileSidebar.classList.add('open');
+  overlay.classList.add('open');
+}
 
+function closeMobileSidebar() {
+  const mobileSidebar = document.getElementById('mobileSidebar');
+  const overlay = document.getElementById('mobileSidebarOverlay');
+  mobileSidebar.classList.remove('open');
+  overlay.classList.remove('open');
+}
+
+// Mobile Sidebar Profile Menu
+document.addEventListener('DOMContentLoaded', function() {
+  const mobileSidebarProfileBtn = document.getElementById('mobileSidebarProfileBtn');
+  const mobileSidebarProfileMenu = document.getElementById('mobileSidebarProfileMenu');
+
+  if (mobileSidebarProfileBtn && mobileSidebarProfileMenu) {
+    mobileSidebarProfileBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      mobileSidebarProfileMenu.classList.toggle('hidden');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!mobileSidebarProfileBtn.contains(e.target) && !mobileSidebarProfileMenu.contains(e.target)) {
+        mobileSidebarProfileMenu.classList.add('hidden');
+      }
+    });
+  }
+});
 
 </script>
 
