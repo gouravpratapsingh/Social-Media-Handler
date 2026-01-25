@@ -78,18 +78,30 @@
             class="hidden text-sm font-semibold text-slate-700">
       </span>
 
-      <!-- SIGNUP -->
-      <a href="login-signup.html" id="signupBtn"
+      <!-- LOGIN -->
+      <a href="login-signup.html" id="loginBtn"
    class="inline-flex items-center justify-center
           px-5 py-2 rounded-full
           text-sm font-medium
-          text-slate-900
+          text-slate-600
           border border-slate-300
           hover:border-slate-900
-          hover:bg-slate-900
-          hover:text-white
+          hover:text-slate-900
           transition-all duration-200">
-  Get Access
+  Login
+</a>
+
+      <!-- SIGNUP -->
+      <a href="login-signup.html?mode=signup" id="signupBtn"
+   class="inline-flex items-center justify-center
+          px-5 py-2 rounded-full
+          text-sm font-medium
+          text-white
+          bg-gradient-to-r from-cyan-500 to-blue-600
+          border border-transparent
+          hover:shadow-lg
+          transition-all duration-200">
+  Sign Up
 </a>
 
 
@@ -529,8 +541,8 @@
     <div class="mt-12 border-t border-slate-200/60 pt-6">
 
       <!-- Bottom Bar -->
-      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-        <p class="text-xs text-slate-500">
+      <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+        <p class="text-xs text-slate-500 text-center">
           © 2026 Graphura India Private Limited. All rights reserved.
         </p>
 

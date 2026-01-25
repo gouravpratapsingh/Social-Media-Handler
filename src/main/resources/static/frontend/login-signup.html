@@ -381,6 +381,16 @@
       signupForm.classList.add('form-enter');
       signinForm.classList.add('form-enter');
     }
+
+    // Handle form switching based on URL parameter or button click
+    document.addEventListener('DOMContentLoaded', function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const mode = urlParams.get('mode');
+      
+      if (mode === 'signup') {
+        toggleForm(); // Show signup form
+      }
+    });
     
     // LOGIN
     document.getElementById('loginFormElement').addEventListener('submit', async (e) => {
